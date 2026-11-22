@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # The stage-3 workflow publishes the exported binaries for the offline stage-4 firmware.
 # Asset publication refreshes main after model training to preserve parallel stage-4 commits.
-"""Fine-tune the French LeCarnet-3M narrator for the 32-token Nexus Cardputer context."""
+"""Fine-tune MaxLSB/LeCarnet-3M on original French Nexus story pairs for a 32-token Cardputer context."""
 
 from __future__ import annotations
 import argparse
@@ -27,7 +27,7 @@ def read_jsonl(path: Path) -> list[dict[str, str]]:
 
 
 def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, list[int]]:
-    # Format exact utilisé par TinyTalk et reproduit sur le Cardputer.
+    # Format d'entraînement LeCarnet reproduit sur le Cardputer.
     prefix = tokenizer.encode(f"User: {row['prompt']}\nBot:", add_special_tokens=False)
     reply = tokenizer.encode(" " + row["response"], add_special_tokens=False)
     eos = tokenizer.eos_token_id
@@ -113,8 +113,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--base", default="TheREZOR/TinyTalk")
-    ap.add_argument("--base-revision", default="main")
+    ap.add_argument("--base", default="MaxLSB/LeCarnet-3M")
+    ap.add_argument("--base-revision", default="0bf134cfceb1b00c7c56a0ebbc1560ec634c3502")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--max-length", type=int, default=80)

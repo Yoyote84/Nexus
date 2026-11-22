@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a deterministic, French-only fine-tuning corpus for Nexus TinyTalk."""
+"""Prepare a deterministic French fine-tuning corpus for the original Nexus LeCarnet narrator."""
 
 from __future__ import annotations
 import argparse
