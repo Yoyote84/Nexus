@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Prepare a deterministic, French-only fine-tuning corpus for Hawkins TinyTalk."""
+"""Prepare a deterministic, French-only fine-tuning corpus for Nexus TinyTalk."""
 
 from __future__ import annotations
 import argparse
 import hashlib
 import json
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,19 @@ EMAIL_RE = re.compile(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b")
 PHONE_RE = re.compile(r"(?<!\w)(?:\+?\d[\d .()/-]{7,}\d)(?!\w)")
 EOS = "<|endoftext|>"
 UNSAFE_LABELS = {"pii", "not_appropriate", "hate_speech", "sexual_content", "spam", "lang_mismatch", "fails_task"}
+
+LEGACY_STORY_TERMS = (
+    "hawkins", "stranger things", "upside down", "demogorgon", "mind flayer",
+    "vecna", "brenner", "starcourt", "hellfire club", "demodog", "demobat",
+    "will byers", "dustin", "mike wheeler", "lucas sinclair", "jim hopper",
+    "joyce byers", "steve harrington", "robin buckley", "nancy wheeler",
+    "max mayfield", "eleven",
+)
+def contains_legacy_story_term(*values: str) -> bool:
+    import unicodedata
+    text = " ".join(values).casefold()
+    text = "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
+    return any(term in text for term in LEGACY_STORY_TERMS)
 
 
 def clean_text(value: Any) -> str:
@@ -106,6 +120,8 @@ def load_alpaca_fr(max_pairs: int) -> tuple[list[dict[str, str]], dict[str, Any]
                 continue
             prompt = clean_text(user.get("value"))
             response = clean_text(assistant.get("value"))
+            if contains_legacy_story_term(prompt, response):
+                continue
             if not (12 <= len(prompt) <= 240 and 12 <= len(response) <= 250):
                 continue
             if len(prompt.split()) > 40 or len(response.split()) > 42:
@@ -152,10 +168,12 @@ def load_seeds(path: Path) -> list[dict[str, str]]:
         prompt, response = clean_text(row.get("prompt")), clean_text(row.get("response"))
         if len(prompt) < 8 or len(response) < 8:
             raise SystemExit(f"seed_fr.jsonl:{line_no}: prompt/réponse trop courts")
+        if contains_legacy_story_term(prompt, response):
+            raise SystemExit(f"seed_fr.jsonl:{line_no}: référence narrative héritée interdite")
         rows.append({"id": str(row.get("id") or f"seed-{line_no}"),
-                     "prompt": prompt, "response": response, "source": "hawkins-original"})
+                     "prompt": prompt, "response": response, "source": "nexus-original"})
     if len(rows) < 20:
-        raise SystemExit("Il faut au moins 20 dialogues originaux Hawkins dans seed_fr.jsonl")
+        raise SystemExit("Il faut au moins 20 dialogues originaux Nexus dans seed_fr.jsonl")
     return rows
 
 
@@ -181,6 +199,8 @@ def load_oasst(max_pairs: int) -> tuple[list[dict[str, str]], dict[str, Any]]:
             continue
         prompt = clean_text(prompt_row.get("text"))
         response = clean_text(answer.get("text"))
+        if contains_legacy_story_term(prompt, response):
+            continue
         if not (12 <= len(prompt) <= 260 and 12 <= len(response) <= 320):
             continue
         if len(prompt.split()) > 42 or len(response.split()) > 58:
@@ -256,7 +276,7 @@ def main() -> None:
     for index, row in enumerate(seeds):
         (val_seeds if index % 5 == 0 else train_seeds).append(row)
 
-    # Les exemples Hawkins originaux sont répétés modérément pour orienter le ton,
+    # Les exemples originaux Nexus sont répétés modérément pour orienter le ton,
     # sans remplacer le corpus français général ni contaminer la validation.
     train = train_oasst + train_seeds * args.seed_repeat
     validation = val_oasst + val_seeds
@@ -278,16 +298,16 @@ def main() -> None:
 
     manifest = {
         "seed": args.seed,
-        "base_model": "TheREZOR/TinyTalk",
-        "base_model_license": "CC-BY-4.0",
-        "corpus_license": "Apache-2.0 for OASST1 and French Alpaca; project-authored Hawkins seeds",
+        "base_model": "MaxLSB/LeCarnet-3M",
+        "base_model_license": "MIT",
+        "corpus_license": "Apache-2.0 for OASST1 and French Alpaca; project-authored Nexus seeds",
         "oasst1": source_info,
         "alpaca_gpt4_french": alpaca_info,
-        "hawkins_seed_count": len(seeds),
-        "hawkins_seed_repeat": args.seed_repeat,
+        "nexus_seed_count": len(seeds),
+        "nexus_seed_repeat": args.seed_repeat,
         "train_examples_after_oversampling": len(train),
         "validation_examples": len(validation),
-        "context_target_tokens": 80,
+        "context_target_tokens": 32,
         "privacy_filters": ["URLs", "email addresses", "phone numbers", "OASST1 PII/toxicity labels"],
     }
     (output / "dataset_manifest.json").write_text(

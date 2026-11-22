@@ -38,7 +38,7 @@ def verify_model(path: Path) -> dict:
     if not (0 < layers <= 32 and 0 < heads <= 32 and 0 < vocab <= 32768):
         raise ValueError("model dimensions/layers/vocabulary outside MCU guardrails")
     if dim % heads or dim % 32 or hidden % 32 or seq_len < 32 or seq_len > 80:
-        raise ValueError("dimensions or context window incompatible with Hawkins profile")
+        raise ValueError("dimensions or context window incompatible with Nexus profile")
     if kv_heads != heads:
         raise ValueError("GPT-Neo requires n_kv_heads == n_heads")
     if shared != 1:

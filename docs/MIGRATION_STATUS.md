@@ -1,15 +1,31 @@
-# Nexus migration status
+# État de migration Nexus
 
-## Five-stage plan
+## Plan en cinq étapes
 
-- [x] 1/5 — audit scope and dependencies.
-- [x] 2/5 — extract the game source, tests, tools, documentation and local model assets into this repository.
-- [ ] 3/5 — replace legacy names and protected narrative elements with an original setting and identity.
-- [ ] 4/5 — separate platform interfaces, connect the ROZA Cardputer adapter and establish CI/build integration.
-- [ ] 5/5 — produce the installable firmware and complete physical Cardputer ADV tests with the user.
+- [x] 1/5 — audit du périmètre et des dépendances.
+- [x] 2/5 — extraction du code, des tests, des outils et des assets dans le dépôt Nexus.
+- [x] 3/5 — originalisation de l'univers, des identifiants, des textes et du corpus du narrateur.
+- [ ] 4/5 — interfaces de plateforme, adaptateur Cardputer/ROZA, compilation et contrôles d'intégration.
+- [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV avec l'utilisateur.
 
-## Extraction boundary
+## Canon narratif actif
 
-The deterministic game state, missions, character, world, exploration logic, narrative protocol/memory, save codecs, local narrator engine, model assets, test harnesses and model tools are now in Nexus. The former app controller is retained under `src/platform/cardputer/legacy/` for refactoring. ROZA's shared display, keyboard, SD, GNSS, LoRa, Wi-Fi and Bluetooth drivers remain in the ROZA repository.
+L'univers actif est Nexus — L'Atlas des Rémanences. L'histoire se déroule autour de Valbrume en 1987. Le mystère central est la Rémanence : le retour irrégulier de fragments d'informations dans des archives et des signaux. LIA signifie Lecteur d'Indices Acoustiques. Le vocabulaire, les groupes, les personnages et les règles sont définis dans docs/UNIVERSE.md.
 
-This snapshot is not yet a standalone firmware build: the host controller and storage/NVS integration still reference ROZA/ESP32 services. Those boundaries are the subject of Step 4. No source file was deleted from ROZA during extraction.
+## Changements de l'étape 3
+
+- Les fichiers et identifiants du jeu ont été renommés du préfixe historique vers nexus_* et le namespace C++ nexus.
+- Les événements narratifs de créatures et de brèches ont été remplacés par des empreintes rémanentes et des ondes de résonance, sans changer l'ordre numérique des événements sauvegardés.
+- L'écran de premier contact, les objectifs, les missions, les libellés et les exemples du narrateur ont été réécrits.
+- Le corpus français de spécialisation contient des dialogues originaux de Valbrume et passe par un filtre qui exclut les références distinctives de l'ancien univers.
+- Un garde-fou lexical refuse une sortie du narrateur contenant ces références.
+- Les clés NVS historiques hawkins et le dossier SD /HAWKINS restent conservés pour ne pas perdre les anciennes sauvegardes. Ce sont des identifiants techniques de compatibilité, pas des éléments du monde.
+- Les documents source historiques restent sous docs/source-notes/ pour provenance et ne font pas partie du canon du jeu.
+
+## Modèle local
+
+Les poids quantifiés actuellement présents dans le dépôt sont provisoires et ont été spécialisés sur l'ancien corpus. Le workflow nexus-model-rebuild.yml doit les remplacer par une exportation réentraînée sur le corpus original. Cette reconstruction est contrôlée séparément : l'étape 3 couvre l'originalisation et le nouveau pipeline ; l'étape 4 ne devra intégrer que l'artefact Nexus vérifié. Le modèle ne change jamais l'état autoritaire du jeu.
+
+## Limites restantes
+
+Le contrôleur Cardputer conservé sous src/platform/cardputer/legacy/ référence encore des services ROZA. Le snapshot n'est pas encore une cible de firmware autonome ; cet adaptateur sera séparé à l'étape 4. L'étape 5 restera réservée au binaire installable et aux essais physiques de l'utilisateur.

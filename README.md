@@ -1,27 +1,36 @@
-# Nexus
+# Nexus — L'Atlas des Rémanences
 
-Nexus is the standalone repository for the offline-first exploration RPG extracted from the ROZA firmware project.
+Nexus est un jeu de rôle d'exploration hors ligne, destiné au M5Stack Cardputer ADV. Le joueur arpente librement des secteurs, recueille des empreintes de la Rémanence et reconstitue un atlas d'événements inhabituels.
 
-The extraction is being performed in stages. This initial repository keeps the original game implementation intact while separating game logic, exploration, local narration, persistence, tests and documentation from the ROZA hardware drivers.
+## Univers
 
-## Target hardware
+L'histoire-cadre prend place en 1987 autour de Valbrume, commune fictive marquée par la Nuit des Retours du 14 octobre 1986. Des fragments de sons et de mesures réapparaissent dans des archives et des signaux. Le joueur est un arpenteur assisté par LIA, le Lecteur d'Indices Acoustiques.
 
-- M5Stack Cardputer ADV
-- Optional Cap LoRa-1262 GNSS module
-- microSD storage for persistent saves and game assets
+Lire docs/UNIVERSE.md, docs/NARRATIVE_STYLE.md et docs/ORIGINALITY_AND_PROVENANCE.md.
 
-The game is designed to run offline on the Cardputer. A phone or network connection is not required during gameplay.
+## Cible
 
-## Migration status
+- M5Stack Cardputer ADV.
+- Module Cap LoRa-1262/GNSS en option pour les données locales de position.
+- microSD pour les sauvegardes et les ressources.
+- Aucun téléphone, réseau ou Wi-Fi nécessaire pendant une partie.
 
-- [x] Step 1 — audit and extraction scope
-- [x] Step 2 — extract source into this repository
-- [ ] Step 3 — create an original setting, naming and narrative assets
-- [ ] Step 4 — integrate and validate the ROZA firmware adapter
-- [ ] Step 5 — final firmware package and physical device testing
+## Organisation
 
-## Important
+- src/core/ — monde, personnage, missions et règles déterministes.
+- src/exploration/ — secteurs et événements de déplacement.
+- src/narrator/ — protocole, mémoire et modèle local.
+- src/storage/ — codecs et adaptateurs de persistance.
+- src/platform/cardputer/ — contrôleur historique à découpler à l'étape 4.
+- tests/ — tests natifs.
+- tools/model/ — corpus, entraînement et export du narrateur.
 
-This is an extraction snapshot, not yet the final renamed game. Original narrative identifiers and assets are retained only as migration input and will be reviewed in Step 3. The ROZA repository remains the firmware host; its hardware drivers are not duplicated here.
+## Migration en cinq étapes
 
-See `docs/MIGRATION_STATUS.md` and `docs/PROVENANCE.md` for the current boundary, source pin and verification notes.
+- [x] 1/5 — audit.
+- [x] 2/5 — extraction dans ce dépôt.
+- [x] 3/5 — univers, textes et corpus originaux.
+- [ ] 4/5 — adaptation et intégration dans le firmware ROZA.
+- [ ] 5/5 — firmware installable et essais Cardputer.
+
+Le binaire de modèle déjà présent est temporaire jusqu'à l'exécution réussie du workflow nexus-model-rebuild.yml. Les clés de sauvegarde historiques restent compatibles ; voir docs/migration/LEGACY_SOURCE_NOTES.md.

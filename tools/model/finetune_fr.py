@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # The stage-3 workflow publishes the exported binaries for the offline stage-4 firmware.
 # Asset publication refreshes main after model training to preserve parallel stage-4 commits.
-"""Fine-tune TheREZOR/TinyTalk on short French chat pairs for an 80-token MCU window."""
+"""Fine-tune the French LeCarnet-3M narrator for the 32-token Nexus Cardputer context."""
 
 from __future__ import annotations
 import argparse
@@ -238,10 +238,10 @@ def main() -> None:
             shutil.copy2(source_file, out_dir / filename)
 
     sample_prompts = [
-        "La radio grésille dans le sous-sol. Que remarques-tu ?",
-        "Nous sommes devant une porte froide au laboratoire. Que proposes-tu ?",
+        "Le relais 07 émet trois impulsions. Que réponds-tu ?",
+        "Une cassette de Valbrume porte une date incohérente. Que vérifies-tu ?",
         "Un ami a peur et veut rentrer chez lui. Que lui réponds-tu ?",
-        "Une lumière clignote dans la forêt après minuit. Décris la scène.",
+        "La station Veyrac renvoie un écho absent du registre. Que notes-tu ?",
     ]
     samples = []
     for prompt in sample_prompts:
