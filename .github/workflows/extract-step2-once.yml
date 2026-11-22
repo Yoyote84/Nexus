@@ -1,0 +1,47 @@
+name: Nexus one-time source extraction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/extract-step2-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Nexus
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch the pinned ROZA source
+        env:
+          SOURCE_SHA: 7d344a7956b7c8ffa633e83201e7a2457bb1becb
+        run: |
+          git init /tmp/roza
+          git -C /tmp/roza remote add origin https://github.com/Yoyote84/Roza.git
+          git -C /tmp/roza fetch --depth=1 origin "$SOURCE_SHA"
+          git -C /tmp/roza checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/roza rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Extract and verify files
+        env:
+          NEXUS_SOURCE_ROOT: /tmp/roza
+          NEXUS_SOURCE_COMMIT: 7d344a7956b7c8ffa633e83201e7a2457bb1becb
+        run: python3 .github/scripts/extract_step2.py
+
+      - name: Commit the extraction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add LICENSE README.md docs src tests tools
+          if git diff --cached --quiet; then
+            echo "Extraction already present; nothing to commit."
+            exit 0
+          fi
+          git commit -m "feat: extract Nexus game from ROZA"
+          git push origin HEAD:main
