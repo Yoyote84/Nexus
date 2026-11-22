@@ -3,9 +3,13 @@
 - Source repository: https://github.com/Yoyote84/Roza
 - Pinned source commit: `7d344a7956b7c8ffa633e83201e7a2457bb1becb`
 - Extraction method: deterministic file copy with explicit destination mapping; ROZA source files remain untouched.
-- Model weights and tokenizer are copied byte-for-byte and checked against the SHA-256 values from the source manifest.
-- The Android companion bridge, generic ROZA drivers, credentials, user saves and unrelated firmware applications are excluded.
+- The model weights and tokenizer in the extracted snapshot were copied byte-for-byte and checked against their original SHA-256 values.
+- The Android companion bridge, generic ROZA drivers, credentials, user saves, superseded narrative notes and unrelated firmware applications are excluded.
 
 ## Third-party attribution to review
 
-The source project records the Cardputer AI engine as MIT and the LeCarnet-3M model as MIT; its training notes also identify ODC-BY and Apache-2.0 source corpora. The original notices and manifests are retained under `src/narrator/hawkins_llm/` and `docs/source-notes/`. Step 3 must verify the exact upstream notices and redistribution terms before release.
+The source project records the Cardputer AI engine and LeCarnet-3M model as MIT-licensed. Training notes identify public datasets with separate terms, including ODC-BY and Apache-2.0. The relevant engine license and upstream model manifest are retained under `src/narrator/local_llm/`; corpus provenance is recorded by the model-build workflow and `tools/model/README.md`.
+
+The model binary currently in the repository is a provisional legacy export and is not approved as a Nexus release asset. The `nexus-model-rebuild.yml` workflow must complete, publish the original Nexus narrator assets and record their new checksums before the model is treated as ready.
+
+The source repository `Roza` retains the historical migration material. Nexus contains only its current universe documentation and concise migration/provenance records.
