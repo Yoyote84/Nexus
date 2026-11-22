@@ -177,7 +177,7 @@ def main():
         "estimated_embedded_total_bytes": total,
         "application_partition_bytes": args.partition_bytes,
         "safety_margin_bytes": args.margin_bytes,
-        "remaining_after_margin_bytes": allowed - total,
+        "remaining_after_margin_bytes": allowed - total if total is not None else None,
         "estimated_llm_dynamic_heap_bytes": estimated_llm_heap,
         "estimated_llm_dynamic_heap_kib": round(estimated_llm_heap / 1024, 2),
         "runtime_heap_note": "Arithmetic estimate from llm_init_embedded allocations; not a measurement of free heap on the physical Cardputer. Stage 5 must log heap_caps_get_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) before/after init.",
