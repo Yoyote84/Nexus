@@ -1,36 +1,108 @@
 {
-  "status": "legacy_asset_pending_original_nexus_retrain",
+  "status": "valid_model_and_tokenizer",
   "model": {
-    "bytes": 1050048,
+    "bytes": 1051344,
     "version": 3,
     "architecture": "llama",
     "dim": 64,
     "hidden": 256,
     "layers": 8,
     "heads": 16,
-    "vocabulary": 14104,
+    "vocabulary": 14131,
     "context": 32,
     "quantization": "Q4_0 row-planar"
   },
   "tokenizer": {
-    "bytes": 230722,
+    "bytes": 231231,
     "format": "CTK2 byte-level BPE",
-    "vocabulary": 14104,
-    "eos_id": 14103,
-    "merges": 13892,
+    "vocabulary": 14131,
+    "eos_id": 14130,
+    "merges": 13919,
     "max_token_bytes": 19,
     "distinct_byte_token_ids": 211,
-    "unknown_fallback_id": 14102,
+    "unknown_fallback_id": 14129,
     "bytes_using_unknown_fallback": 46
   },
-  "base_firmware_bytes": 3769088,
-  "estimated_embedded_total_bytes": 5049858,
+  "base_firmware_bytes": null,
+  "estimated_embedded_total_bytes": null,
   "application_partition_bytes": 8257536,
   "safety_margin_bytes": 262144,
-  "remaining_after_margin_bytes": 2945534,
-  "estimated_llm_dynamic_heap_bytes": 127872,
-  "estimated_llm_dynamic_heap_kib": 124.88,
+  "remaining_after_margin_bytes": null,
+  "estimated_llm_dynamic_heap_bytes": 127980,
+  "estimated_llm_dynamic_heap_kib": 124.98,
   "runtime_heap_note": "Arithmetic estimate from llm_init_embedded allocations; not a measurement of free heap on the physical Cardputer. Stage 5 must log heap_caps_get_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) before/after init.",
-  "note": "Temporary pre-Nexus narrative fine-tune. Replace through nexus-model-rebuild.yml before release.",
-  "lore_training_status": "not_approved_for_nexus_release"
+  "note": "Model/tokenizer structure validated; firmware flash budget is deferred to Nexus step 4.",
+  "stage": "3/5",
+  "lore_training_status": "nexus-original-corpus",
+  "base_model": "MaxLSB/LeCarnet-3M",
+  "base_model_revision": "0bf134cfceb1b00c7c56a0ebbc1560ec634c3502",
+  "base_model_license": "MIT",
+  "training_corpus": {
+    "seed": 1703,
+    "base_model": "MaxLSB/LeCarnet-3M",
+    "base_model_license": "MIT",
+    "corpus_license": "Apache-2.0 for OASST1 and French Alpaca; project-authored Nexus seeds",
+    "oasst1": {
+      "dataset": "OpenAssistant/oasst1",
+      "split": "train",
+      "license": "Apache-2.0",
+      "language_filter": "fr",
+      "accepted_pairs": 177,
+      "max_pairs": 1200
+    },
+    "alpaca_gpt4_french": {
+      "dataset": "FreedomIntelligence/alpaca-gpt4-french",
+      "split": "train",
+      "license": "Apache-2.0",
+      "language_filter": "French dataset; human to gpt conversation pairs",
+      "accepted_pairs": 5000,
+      "max_pairs": 5000
+    },
+    "nexus_seed_count": 40,
+    "nexus_seed_repeat": 6,
+    "train_examples_after_oversampling": 4867,
+    "validation_examples": 510,
+    "context_target_tokens": 32,
+    "privacy_filters": [
+      "URLs",
+      "email addresses",
+      "phone numbers",
+      "OASST1 PII/toxicity labels"
+    ]
+  },
+  "training_metrics": {
+    "base_model": "MaxLSB/LeCarnet-3M",
+    "base_revision": "0bf134cfceb1b00c7c56a0ebbc1560ec634c3502",
+    "architecture": "llama",
+    "parameter_count": 3742144,
+    "epochs": 3,
+    "batch_size": 16,
+    "max_length": 32,
+    "learning_rate": 5e-05,
+    "best_validation_token_loss": 5.867153267709492,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss_mean": 6.962654168488549,
+        "validation_token_loss": 6.226461455079964
+      },
+      {
+        "epoch": 2,
+        "train_loss_mean": 5.743490796011002,
+        "validation_token_loss": 5.9199872213642495
+      },
+      {
+        "epoch": 3,
+        "train_loss_mean": 5.470267943866918,
+        "validation_token_loss": 5.867153267709492
+      }
+    ],
+    "elapsed_seconds": 317.96,
+    "train_examples": 4867,
+    "validation_examples": 510,
+    "samples_file": "samples_fr.jsonl"
+  },
+  "runtime_guard": "Distinctive legacy narrative terms are rejected by the Cardputer narrator adapter.",
+  "firmware_flash_budget": "deferred_to_stage_4",
+  "physical_cardputer_test": "deferred_to_stage_5"
 }
