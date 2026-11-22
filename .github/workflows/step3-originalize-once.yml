@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/step3-originalize-once.yml"
+      - "tools/migration/originalize_step3.py"
 
 permissions:
   contents: write
