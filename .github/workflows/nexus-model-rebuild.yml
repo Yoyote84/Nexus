@@ -1,0 +1,156 @@
+name: Nexus local narrator rebuild
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tools/model/seed_fr.jsonl"
+      - "tools/model/prepare_fr_dataset.py"
+      - "tools/model/finetune_fr.py"
+      - "tools/model/convert_lecarnet.py"
+      - "tools/model/verify_lecarnet_export.py"
+      - "tools/model/check_narrator_lore.py"
+      - ".github/workflows/nexus-model-rebuild.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nexus-local-narrator-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    name: Re-train and export original Nexus narrator
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      PYTHONUNBUFFERED: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+    steps:
+      - name: Checkout Nexus
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pinned CPU training dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install transformers==4.51.3 datasets==3.5.0 pyarrow==17.0.0 huggingface_hub==0.30.2 tokenizers==0.21.1 safetensors==0.5.3 numpy==1.26.4 accelerate==1.5.2
+
+      - name: Check original seed corpus and syntax
+        run: |
+          python tools/model/check_narrator_lore.py --input tools/model/seed_fr.jsonl
+          python -m py_compile tools/model/prepare_fr_dataset.py tools/model/finetune_fr.py tools/model/convert_lecarnet.py tools/model/verify_lecarnet_export.py
+
+      - name: Prepare filtered French training data
+        run: |
+          python tools/model/prepare_fr_dataset.py \
+            --output-dir "$RUNNER_TEMP/nexus-fr-data" \
+            --max-oasst1 1200 \
+            --max-alpaca 5000 \
+            --seed-repeat 6
+
+      - name: Check prepared corpus for legacy story terms
+        run: |
+          python tools/model/check_narrator_lore.py \
+            --input "$RUNNER_TEMP/nexus-fr-data/train.jsonl" \
+            --input "$RUNNER_TEMP/nexus-fr-data/validation.jsonl" \
+            --input "$RUNNER_TEMP/nexus-fr-data/corpus.txt"
+
+      - name: Fine-tune the French LeCarnet narrator
+        run: |
+          python tools/model/finetune_fr.py \
+            --data-dir "$RUNNER_TEMP/nexus-fr-data" \
+            --out-dir "$RUNNER_TEMP/nexus-lecarnet-fr" \
+            --base MaxLSB/LeCarnet-3M \
+            --base-revision 0bf134cfceb1b00c7c56a0ebbc1560ec634c3502 \
+            --epochs 3 \
+            --batch-size 16 \
+            --max-length 32 \
+            --learning-rate 0.00005
+
+      - name: Check model-generated samples
+        run: |
+          python tools/model/check_narrator_lore.py --input "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl"
+
+      - name: Export Cardputer-compatible CRDP v3 and CTK2 assets
+        run: |
+          python tools/model/convert_lecarnet.py \
+            --model-dir "$RUNNER_TEMP/nexus-lecarnet-fr" \
+            --corpus "$RUNNER_TEMP/nexus-fr-data/corpus.txt" \
+            --output-model "$RUNNER_TEMP/model_lecarnet_q4.bin" \
+            --output-tokenizer "$RUNNER_TEMP/tokenizer_lecarnet_ctk2.bin" \
+            --context 32 \
+            --min-count 2 \
+            --max-vocab 16000
+
+      - name: Verify model and tokenizer structures
+        run: |
+          python tools/model/verify_lecarnet_export.py \
+            --model "$RUNNER_TEMP/model_lecarnet_q4.bin" \
+            --tokenizer "$RUNNER_TEMP/tokenizer_lecarnet_ctk2.bin" \
+            --output "$RUNNER_TEMP/model_manifest.json"
+
+      - name: Add Nexus corpus provenance to model manifest
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          manifest = json.loads((root / "model_manifest.json").read_text())
+          dataset = json.loads((root / "nexus-fr-data/dataset_manifest.json").read_text())
+          metrics = json.loads((root / "nexus-lecarnet-fr/metrics.json").read_text())
+          manifest.update({
+              "stage": "3/5",
+              "lore_training_status": "nexus-original-corpus",
+              "base_model": "MaxLSB/LeCarnet-3M",
+              "base_model_revision": "0bf134cfceb1b00c7c56a0ebbc1560ec634c3502",
+              "base_model_license": "MIT",
+              "training_corpus": dataset,
+              "training_metrics": metrics,
+              "runtime_guard": "Distinctive legacy narrative terms are rejected by the Cardputer narrator adapter.",
+              "firmware_flash_budget": "deferred_to_stage_4",
+              "physical_cardputer_test": "deferred_to_stage_5"
+          })
+          (root / "model_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+          PY
+
+      - name: Publish verified Nexus narrator assets
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          mkdir -p src/narrator/local_llm/assets
+          cp "$RUNNER_TEMP/model_lecarnet_q4.bin" src/narrator/local_llm/assets/model_lecarnet_q4.bin
+          cp "$RUNNER_TEMP/tokenizer_lecarnet_ctk2.bin" src/narrator/local_llm/assets/tokenizer_lecarnet_ctk2.bin
+          cp "$RUNNER_TEMP/model_manifest.json" src/narrator/local_llm/assets/model_manifest.json
+          (
+            cd src/narrator/local_llm/assets
+            sha256sum model_lecarnet_q4.bin tokenizer_lecarnet_ctk2.bin > SHA256SUMS.txt
+          )
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/narrator/local_llm/assets
+          git commit -m "feat: publish original Nexus narrator model"
+          git push origin HEAD:main
+
+      - name: Upload model provenance and metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-local-narrator-step3-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/model_lecarnet_q4.bin
+            ${{ runner.temp }}/tokenizer_lecarnet_ctk2.bin
+            ${{ runner.temp }}/nexus-fr-data/dataset_manifest.json
+            ${{ runner.temp }}/nexus-lecarnet-fr/metrics.json
+            ${{ runner.temp }}/nexus-lecarnet-fr/samples_fr.jsonl
+            ${{ runner.temp }}/model_manifest.json
+          if-no-files-found: error
+          retention-days: 90
