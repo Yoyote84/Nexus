@@ -387,10 +387,19 @@ def contains_legacy_story_term(*values: str) -> bool:
     data = data.replace('"hawkins_seed_count": len(seeds)', '"nexus_seed_count": len(seeds)')
     data = data.replace('"hawkins_seed_repeat": args.seed_repeat', '"nexus_seed_repeat": args.seed_repeat')
     data = data.replace("project-authored Nexus seeds", "project-authored Nexus seeds")
+    data = data.replace('"base_model": "TheREZOR/TinyTalk"', '"base_model": "MaxLSB/LeCarnet-3M"')
+    data = data.replace('"base_model_license": "CC-BY-4.0"', '"base_model_license": "MIT"')
+    data = data.replace('"corpus_license": "Apache-2.0 for OASST1 and French Alpaca; project-authored Nexus seeds"',
+                        '"corpus_license": "Apache-2.0 for OASST1 and French Alpaca; project-authored Nexus seeds"')
+    data = data.replace('"context_target_tokens": 80', '"context_target_tokens": 32')
     prep.write_text(data, encoding="utf-8", newline="")
 
     fine = ROOT / "tools/model/finetune_fr.py"
     data = fine.read_text(encoding="utf-8")
+    data = data.replace(
+        "Fine-tune TheREZOR/TinyTalk on short French chat pairs for an 80-token MCU window.",
+        "Fine-tune the French LeCarnet-3M narrator for the 32-token Nexus Cardputer context."
+    )
     data = data.replace("La radio grésille dans le sous-sol. Que remarques-tu ?", "Le relais 07 émet trois impulsions. Que réponds-tu ?")
     data = data.replace("Nous sommes devant une porte froide au laboratoire. Que proposes-tu ?", "Une cassette de Valbrume porte une date incohérente. Que vérifies-tu ?")
     data = data.replace("Une lumière clignote dans la forêt après minuit. Décris la scène.", "La station Veyrac renvoie un écho absent du registre. Que notes-tu ?")
