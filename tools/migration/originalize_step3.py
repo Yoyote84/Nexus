@@ -531,7 +531,7 @@ def finalize_code():
     data = mission.read_text(encoding="utf-8")
     data = data.replace('{"LE PREMIER SIGNAL", "Repondre au premier appel radio", 1U},', '{"PREMIER CONTACT", "Accuser reception du relais LIA", 1U},')
     data = data.replace('{"CARTOGRAPHIE", "Explorer trois secteurs distincts", 3U},', '{"CARTOGRAPHIE DES ECHOS", "Explorer trois secteurs distincts", 3U},')
-    data = data.replace('{"PISTE DE L\\'ANOMALIE", "Trouver deux signaux", 2U},', '{"ARCHIVE INCOMPLETE", "Retrouver deux empreintes remanentes", 2U},')
+    data = data.replace("{\"PISTE DE L'ANOMALIE\", \"Trouver deux signaux\", 2U},", "{\"ARCHIVE INCOMPLETE\", \"Retrouver deux empreintes remanentes\", 2U},")
     mission.write_text(data, encoding="utf-8", newline="")
     adventure = ROOT / "src/core/nexus_adventure.cpp"
     data = adventure.read_text(encoding="utf-8").replace('case AdventureItem::Evidence: return "PREUVE";', 'case AdventureItem::Evidence: return "FRAGMENT ARCHIVE";')
