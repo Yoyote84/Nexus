@@ -29,7 +29,7 @@ Lire docs/UNIVERSE.md, docs/NARRATIVE_STYLE.md et docs/ORIGINALITY_AND_PROVENANC
 
 - [x] 1/5 — audit.
 - [x] 2/5 — extraction dans ce dépôt.
-- [x] 3/5 — univers, textes et corpus originaux.
+- [~] 3/5 — univers, textes et corpus originaux ; réentraînement du narrateur en cours.
 - [ ] 4/5 — adaptation et intégration dans le firmware ROZA.
 - [ ] 5/5 — firmware installable et essais Cardputer.
 
