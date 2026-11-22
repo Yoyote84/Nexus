@@ -49,6 +49,9 @@ jobs:
       - name: Run local LLM host tests
         run: bash tests/nexus_llm/build.sh
 
+      - name: Remove generated Python cache files
+        run: find . -type d -name __pycache__ -prune -exec rm -rf {} +
+
       - name: Commit originalized Nexus source and narrative corpus
         run: |
           git config user.name "github-actions[bot]"
