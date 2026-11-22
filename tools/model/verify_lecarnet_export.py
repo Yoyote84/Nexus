@@ -140,15 +140,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--tokenizer", required=True)
-    ap.add_argument("--firmware-bin", required=True)
+    ap.add_argument("--firmware-bin")
     ap.add_argument("--output", required=True)
     ap.add_argument("--partition-bytes", type=int, default=PARTITION_BYTES)
     ap.add_argument("--margin-bytes", type=int, default=SAFETY_MARGIN)
     args = ap.parse_args()
     model = verify_model(Path(args.model))
     tokenizer = verify_tokenizer(Path(args.tokenizer), model["vocabulary"])
-    firmware_bytes = Path(args.firmware_bin).stat().st_size
-    total = firmware_bytes + model["bytes"] + tokenizer["bytes"]
+    firmware_bytes = Path(args.firmware_bin).stat().st_size if args.firmware_bin else None
+    total = firmware_bytes + model["bytes"] + tokenizer["bytes"] if firmware_bytes is not None else None
     allowed = args.partition_bytes - args.margin_bytes
 
     # Approximate dynamic heap requested by llm_init_embedded for the current
@@ -164,13 +164,13 @@ def main():
     kv_cache = 2 * layers * context * kv_dim * 2  # K and V, BF16
     q8_scratch = max(dim, hidden) + (max(dim, hidden) // 32) * 4
     estimated_llm_heap = float_state + kv_cache + q8_scratch
-    if total > allowed:
+    if total is not None and total > allowed:
         raise SystemExit(
             f"Flash budget exceeded: {total:,} bytes > {allowed:,} bytes "
             "after reserved safety margin"
         )
     report = {
-        "status": "valid",
+        "status": "valid_model_and_tokenizer" if firmware_bytes is None else "valid",
         "model": model,
         "tokenizer": tokenizer,
         "base_firmware_bytes": firmware_bytes,
@@ -181,7 +181,11 @@ def main():
         "estimated_llm_dynamic_heap_bytes": estimated_llm_heap,
         "estimated_llm_dynamic_heap_kib": round(estimated_llm_heap / 1024, 2),
         "runtime_heap_note": "Arithmetic estimate from llm_init_embedded allocations; not a measurement of free heap on the physical Cardputer. Stage 5 must log heap_caps_get_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) before/after init.",
-        "note": "Estimation before stage-4 embedding; final binary size and runtime heap must be remeasured.",
+        "note": (
+            "Model/tokenizer structure validated; firmware flash budget is deferred to Nexus step 4."
+            if firmware_bytes is None else
+            "Estimation before stage-4 embedding; final binary size and runtime heap must be remeasured."
+        ),
     }
     Path(args.output).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
