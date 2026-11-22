@@ -1,5 +1,9 @@
-# Archives de migration
+# Notes de compatibilité héritée
 
-Les documents docs/source-notes/ sont des instantanés historiques importés depuis le dépôt ROZA pour assurer la traçabilité technique. Ils décrivent l'ancienne version de travail et ne constituent ni le canon narratif ni le contenu destiné au joueur. L'univers actif est défini par docs/UNIVERSE.md et docs/NARRATIVE_STYLE.md.
+Les anciens documents de conception et d'implémentation restent dans le dépôt source `Yoyote84/Roza`. Ils ne sont pas recopiés dans Nexus afin de ne pas publier les anciennes références narratives avec le nouveau jeu.
 
-Les anciennes clés NVS hawkins et le répertoire SD /HAWKINS sont conservés uniquement pour lire les sauvegardes antérieures.
+Deux espaces techniques sont volontairement conservés pour assurer la continuité des parties créées avant la migration :
+- clé NVS `hawkins` ;
+- répertoire SD `/HAWKINS` et ses fichiers d'archive.
+
+Ces noms sont des identifiants de stockage historiques uniquement. Ils ne sont ni des lieux, ni des groupes, ni des personnages de l'univers Nexus. Les formats de sauvegarde restent compatibles ; aucune suppression ou migration destructive des données utilisateur n'est effectuée automatiquement.
