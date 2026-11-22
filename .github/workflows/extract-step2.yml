@@ -1,0 +1,48 @@
+name: Extract Nexus game from ROZA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/extract-step2.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nexus-step2-extraction
+  cancel-in-progress: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Nexus
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch the exact ROZA source revision
+        env:
+          SOURCE_SHA: 7d344a7956b7c8ffa633e83201e7a2457bb1becb
+        run: |
+          git init /tmp/roza
+          git -C /tmp/roza remote add origin https://github.com/Yoyote84/Roza.git
+          git -C /tmp/roza fetch --depth=1 origin "$SOURCE_SHA"
+          git -C /tmp/roza checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/roza rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Copy game modules, tests, tools and model assets
+        env:
+          NEXUS_SOURCE_ROOT: /tmp/roza
+          NEXUS_SOURCE_COMMIT: 7d344a7956b7c8ffa633e83201e7a2457bb1becb
+        run: python3 .github/scripts/extract_step2.py
+
+      - name: Commit extracted snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add LICENSE README.md docs src tests tools
+          git diff --cached --check
+          git commit -m "feat: extract Nexus game from ROZA"
+          git push origin HEAD:main
