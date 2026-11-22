@@ -590,3 +590,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# Retry-safe migration marker: story rewrites are deterministic and legacy save keys remain unchanged.
