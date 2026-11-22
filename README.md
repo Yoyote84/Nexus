@@ -15,7 +15,7 @@ The game is designed to run offline on the Cardputer. A phone or network connect
 ## Migration status
 
 - [x] Step 1 — audit and extraction scope
-- [ ] Step 2 — extract source into this repository
+- [x] Step 2 — extract source into this repository
 - [ ] Step 3 — create an original setting, naming and narrative assets
 - [ ] Step 4 — integrate and validate the ROZA firmware adapter
 - [ ] Step 5 — final firmware package and physical device testing
@@ -24,4 +24,4 @@ The game is designed to run offline on the Cardputer. A phone or network connect
 
 This is an extraction snapshot, not yet the final renamed game. Original narrative identifiers and assets are retained only as migration input and will be reviewed in Step 3. The ROZA repository remains the firmware host; its hardware drivers are not duplicated here.
 
-See `docs/MIGRATION_STATUS.md` for the current boundary and verification notes.
+See `docs/MIGRATION_STATUS.md` and `docs/PROVENANCE.md` for the current boundary, source pin and verification notes.

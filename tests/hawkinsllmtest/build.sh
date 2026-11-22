@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+CXX_BIN="${CXX:-g++}"
+"$CXX_BIN" -std=c++17 -O2 -Wall -Wextra -pthread \
+  -DLLM_FORCE_SCALAR \
+  -I host -I ../../src/narrator/hawkins_llm \
+  main.cpp ../../src/narrator/hawkins_llm/llm.cpp ../../src/narrator/hawkins_llm/port.cpp \
+  -o /tmp/roza-hawkins-llm-test
+/tmp/roza-hawkins-llm-test
