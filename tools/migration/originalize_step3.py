@@ -383,7 +383,6 @@ def contains_legacy_story_term(*values: str) -> bool:
         data = data.replace('rows.append({"id": str(row.get("id") or f"seed-{line_no}"),',
                             'if contains_legacy_story_term(prompt, response):\n            raise SystemExit(f"seed_fr.jsonl:{line_no}: référence narrative héritée interdite")\n        rows.append({"id": str(row.get("id") or f"seed-{line_no}"),')
     data = data.replace("hawkins-original", "nexus-original")
-    data = data.replace("Hawkins", "Nexus").replace("hawkins", "Nexus")
     data = data.replace("Les exemples Nexus originaux sont", "Les exemples originaux Nexus sont")
     data = data.replace('"hawkins_seed_count": len(seeds)', '"nexus_seed_count": len(seeds)')
     data = data.replace('"hawkins_seed_repeat": args.seed_repeat', '"nexus_seed_repeat": args.seed_repeat')
