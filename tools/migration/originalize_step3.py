@@ -549,8 +549,20 @@ def finalize_code():
     # Explicit include paths for the new source boundaries.
     test_llm = ROOT / "tests/nexus_llm/build.sh"
     if test_llm.exists():
-        data = test_llm.read_text(encoding="utf-8").replace("../../src/local_llm", "../../src/narrator/local_llm")
-        test_llm.write_text(data, encoding="utf-8", newline="")
+        test_llm.write_text("""#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+CXX_BIN="${CXX:-g++}"
+ENGINE_DIR="../../src/narrator/local_llm"
+test -f "$ENGINE_DIR/port.h" || { echo "LLM source folder missing: $ENGINE_DIR" >&2; exit 1; }
+test -f "$ENGINE_DIR/llm.cpp" || { echo "LLM engine missing: $ENGINE_DIR/llm.cpp" >&2; exit 1; }
+"$CXX_BIN" -std=c++17 -O2 -Wall -Wextra -pthread \\
+  -DLLM_FORCE_SCALAR \\
+  -I host -I "$ENGINE_DIR" \\
+  main.cpp "$ENGINE_DIR/llm.cpp" "$ENGINE_DIR/port.cpp" \\
+  -o /tmp/nexus-local-llm-test
+/tmp/nexus-local-llm-test
+""", encoding="utf-8", newline="")
     # Mark model as provisional until the new corpus has been trained and exported.
     manifest = ROOT / "src/narrator/local_llm/assets/model_manifest.json"
     data = json.loads(manifest.read_text(encoding="utf-8"))
