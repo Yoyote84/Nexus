@@ -1,0 +1,59 @@
+name: Nexus original-world migration (step 3)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/step3-originalize-once.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nexus-originalization-step3
+  cancel-in-progress: false
+
+jobs:
+  originalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Nexus
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate migration script syntax
+        run: python -m py_compile tools/migration/originalize_step3.py
+
+      - name: Apply original Nexus universe and source names
+        run: python tools/migration/originalize_step3.py
+
+      - name: Validate Python tools and narrator assets
+        run: |
+          python -m py_compile \
+            tools/model/prepare_fr_dataset.py \
+            tools/model/finetune_fr.py \
+            tools/model/convert_lecarnet.py \
+            tools/model/verify_lecarnet_export.py \
+            tools/model/check_narrator_lore.py
+          python tools/model/check_narrator_lore.py --input tools/model/seed_fr.jsonl
+
+      - name: Run deterministic game logic tests
+        run: bash tests/nexus_core/build.sh
+
+      - name: Run local LLM host tests
+        run: bash tests/nexus_llm/build.sh
+
+      - name: Commit originalized Nexus source and narrative corpus
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat: originalize Nexus world and narrator"
+          git push origin HEAD:main
