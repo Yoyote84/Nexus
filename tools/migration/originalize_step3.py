@@ -571,6 +571,12 @@ def finalize_code():
     data = sd.read_text(encoding="utf-8")
     data = data.replace('constexpr char kDirectory[] = "/HAWKINS";', '// Legacy SD archive path retained so old backups remain readable.\nconstexpr char kDirectory[] = "/HAWKINS";')
     sd.write_text(data, encoding="utf-8", newline="")
+    # Point the assembler to the moved local narrator binaries.
+    asm = ROOT / "src/narrator/local_llm/model_data.S"
+    data = asm.read_text(encoding="utf-8")
+    data = data.replace('"src/nexus_llm/assets/', '"src/narrator/local_llm/assets/')
+    data = data.replace('"src/local_llm/assets/', '"src/narrator/local_llm/assets/')
+    asm.write_text(data, encoding="utf-8", newline="")
 
 def main():
     rename_sources()
