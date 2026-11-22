@@ -540,7 +540,7 @@ def finalize_code():
     data = character.read_text(encoding="utf-8").replace('{"SENSITIF", "Resiste aux anomalies", "Bonus : Perception / Charisme",', '{"ANALYSTE", "Lit les motifs de remanence", "Bonus : Perception / Charisme",')
     character.write_text(data, encoding="utf-8", newline="")
     exploration = ROOT / "src/exploration/nexus_exploration.cpp"
-    data = exploration.read_text(encoding="utf-8").replace('mission "Piste de l\\'anomalie"', 'mission "Archive incomplete"')
+    data = exploration.read_text(encoding="utf-8").replace("mission \"Piste de l'anomalie\"", "mission \"Archive incomplete\"")
     exploration.write_text(data, encoding="utf-8", newline="")
     # Rewrite test fixture name, not player save formats.
     test = ROOT / "tests/nexus_core/adventure_test.cpp"
