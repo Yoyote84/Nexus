@@ -9,8 +9,12 @@ on:
       - "tools/model/finetune_fr.py"
       - "tools/model/convert_lecarnet.py"
       - "tools/model/verify_lecarnet_export.py"
+      - "tools/model/verify_published_assets.py"
+      - "tools/model/verify_narrator_samples.py"
       - "tools/model/check_narrator_lore.py"
       - ".github/workflows/nexus-model-rebuild.yml"
+      - "tests/nexus_core/**"
+      - "tests/nexus_llm/**"
   workflow_dispatch:
 
 permissions:
@@ -22,7 +26,7 @@ concurrency:
 
 jobs:
   rebuild:
-    name: Re-train and export original Nexus narrator
+    name: Re-train and verify original Nexus narrator
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
@@ -44,18 +48,18 @@ jobs:
           python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
           python -m pip install transformers==4.51.3 datasets==3.5.0 pyarrow==17.0.0 huggingface_hub==0.30.2 tokenizers==0.21.1 safetensors==0.5.3 numpy==1.26.4 accelerate==1.5.2
 
-      - name: Check original seed corpus and syntax
+      - name: Check original seed corpus and Python syntax
         run: |
           python tools/model/check_narrator_lore.py --input tools/model/seed_fr.jsonl
-          python -m py_compile tools/model/prepare_fr_dataset.py tools/model/finetune_fr.py tools/model/convert_lecarnet.py tools/model/verify_lecarnet_export.py
+          python -m py_compile tools/model/prepare_fr_dataset.py tools/model/finetune_fr.py tools/model/convert_lecarnet.py tools/model/verify_lecarnet_export.py tools/model/verify_published_assets.py tools/model/verify_narrator_samples.py
 
-      - name: Prepare filtered French training data
+      - name: Prepare French corpus with stronger Nexus narrative weighting
         run: |
           python tools/model/prepare_fr_dataset.py \
             --output-dir "$RUNNER_TEMP/nexus-fr-data" \
-            --max-oasst1 1200 \
-            --max-alpaca 5000 \
-            --seed-repeat 6
+            --max-oasst1 150 \
+            --max-alpaca 700 \
+            --seed-repeat 24
 
       - name: Check prepared corpus for legacy story terms
         run: |
@@ -71,14 +75,21 @@ jobs:
             --out-dir "$RUNNER_TEMP/nexus-lecarnet-fr" \
             --base MaxLSB/LeCarnet-3M \
             --base-revision 0bf134cfceb1b00c7c56a0ebbc1560ec634c3502 \
-            --epochs 3 \
+            --epochs 10 \
             --batch-size 16 \
             --max-length 32 \
             --learning-rate 0.00005
 
-      - name: Check model-generated samples
+      - name: Check generated French samples for originality
         run: |
           python tools/model/check_narrator_lore.py --input "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl"
+
+      - name: Check generated samples for complete, useful narration
+        run: |
+          python tools/model/verify_narrator_samples.py \
+            --input "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl" \
+            --minimum-samples 4 \
+            --minimum-lore-samples 2
 
       - name: Export Cardputer-compatible CRDP v3 and CTK2 assets
         run: |
@@ -138,10 +149,21 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/narrator/local_llm/assets
-          git commit -m "feat: publish original Nexus narrator model"
+          git commit -m "feat: publish validated Nexus local narrator"
           git push origin HEAD:main
 
-      - name: Upload model provenance and metrics
+      - name: Verify published hashes and model provenance
+        run: |
+          sha256sum -c src/narrator/local_llm/assets/SHA256SUMS.txt --directory=src/narrator/local_llm/assets
+          python tools/model/verify_published_assets.py
+
+      - name: Run native Nexus core regression tests
+        run: bash tests/nexus_core/build.sh
+
+      - name: Run native local narrator safety tests
+        run: bash tests/nexus_llm/build.sh
+
+      - name: Upload model provenance, metrics and French samples
         uses: actions/upload-artifact@v4
         with:
           name: nexus-local-narrator-step3-${{ github.sha }}

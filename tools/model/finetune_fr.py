@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# The stage-3 workflow publishes the exported binaries for the offline stage-4 firmware.
-# Asset publication refreshes main after model training to preserve parallel stage-4 commits.
-"""Fine-tune MaxLSB/LeCarnet-3M on original French Nexus story pairs for a 32-token Cardputer context."""
+# Step 3 builds the standalone French narrator; step 4 handles firmware coupling.
+"""Fine-tune MaxLSB/LeCarnet-3M on French Nexus dialogue for a 32-token Cardputer context."""
 
 from __future__ import annotations
 import argparse
 import json
 import math
 import random
+import re
 import shutil
 import time
 from pathlib import Path
@@ -26,10 +26,46 @@ def read_jsonl(path: Path) -> list[dict[str, str]]:
     return rows
 
 
+def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int]:
+    """Keep a complete sentence or a word-boundary fragment, never cut BPE mid-word."""
+    normalized = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not normalized or token_budget < 2:
+        raise RuntimeError("Réponse vide ou budget de tokens insuffisant.")
+
+    def encode(value: str) -> list[int]:
+        return tokenizer.encode(" " + value, add_special_tokens=False)
+
+    full = encode(normalized)
+    if len(full) <= token_budget:
+        return full
+
+    # Prefer the first complete source sentence that fits the embedded budget.
+    sentences = re.split(r"(?<=[.!?…])\s+", normalized)
+    for sentence in sentences:
+        candidate = sentence.strip()
+        if candidate and candidate[-1] in ".!?…" :
+            ids = encode(candidate)
+            if 2 <= len(ids) <= token_budget:
+                return ids
+
+    # If even the first sentence is too long, back off by whole words and close it.
+    words = normalized.split()
+    for count in range(len(words) - 1, 0, -1):
+        candidate = " ".join(words[:count]).rstrip(" ,;:-")
+        if not candidate:
+            continue
+        if candidate[-1] not in ".!?…":
+            candidate += "."
+        ids = encode(candidate)
+        if 2 <= len(ids) <= token_budget:
+            return ids
+
+    raise RuntimeError("Impossible de conserver une réponse complète dans le budget Cardputer.")
+
+
 def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, list[int]]:
     # Format d'entraînement LeCarnet reproduit sur le Cardputer.
     prefix = tokenizer.encode(f"User: {row['prompt']}\nBot:", add_special_tokens=False)
-    reply = tokenizer.encode(" " + row["response"], add_special_tokens=False)
     eos = tokenizer.eos_token_id
     if eos is None:
         raise RuntimeError("Le tokenizer de base n'a pas de token EOS.")
@@ -43,13 +79,14 @@ def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, li
         else:
             prefix = prefix[-max_prefix:]
     available = max_length - len(prefix)
-    if available < 2:
+    if available < 3:
         raise RuntimeError("Le préfixe consomme toute la fenêtre de contexte.")
-    if len(reply) + 1 > available:
-        reply = reply[:available - 1]
+    reply = encode_complete_reply(row["response"], tokenizer, available - 1)
     target = reply + [eos]
     ids = prefix + target
     labels = [-100] * len(prefix) + target
+    if len(ids) > max_length:
+        raise RuntimeError("Paire encodée au-delà du contexte autorisé.")
     return {"input_ids": ids, "labels": labels}
 
 
@@ -95,11 +132,9 @@ def generate_sample(model, tokenizer, prompt: str, device: str) -> str:
         bos = torch.tensor([[tokenizer.bos_token_id]], dtype=torch.long)
         encoded = torch.cat((bos, encoded), dim=1)
     ids = encoded.to(device)
-    # EOS is also used as PAD for this compact tokenizer, so generation must
-    # receive an explicit mask rather than trying to infer it from token IDs.
     attention_mask = torch.ones_like(ids)
     out = model.generate(
-        ids, attention_mask=attention_mask, max_new_tokens=28, do_sample=False,
+        ids, attention_mask=attention_mask, max_new_tokens=9, do_sample=False,
         eos_token_id=tokenizer.eos_token_id,
         pad_token_id=tokenizer.eos_token_id,
         use_cache=True,
@@ -115,15 +150,15 @@ def main() -> None:
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--base", default="MaxLSB/LeCarnet-3M")
     ap.add_argument("--base-revision", default="0bf134cfceb1b00c7c56a0ebbc1560ec634c3502")
-    ap.add_argument("--epochs", type=int, default=3)
-    ap.add_argument("--batch-size", type=int, default=8)
-    ap.add_argument("--max-length", type=int, default=80)
+    ap.add_argument("--epochs", type=int, default=10)
+    ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--max-length", type=int, default=32)
     ap.add_argument("--learning-rate", type=float, default=5e-5)
     ap.add_argument("--seed", type=int, default=1703)
     args = ap.parse_args()
 
-    if not 32 <= args.max_length <= 80:
-        raise SystemExit("--max-length doit rester entre 32 et 80 pour le profil Cardputer.")
+    if args.max_length != 32:
+        raise SystemExit("--max-length doit être exactement 32 pour le profil Cardputer Nexus.")
     if args.epochs < 1 or args.batch_size < 1:
         raise SystemExit("--epochs et --batch-size doivent être positifs.")
 
@@ -220,17 +255,10 @@ def main() -> None:
     model.save_pretrained(out_dir, safe_serialization=False)
     tokenizer.save_pretrained(out_dir)
 
-    # LeCarnet stores its six control-token ids in tokenizer_config.json's
-    # added_tokens_decoder rather than in the ordinary GPT-2 vocab/merge table.
-    # Restore the pinned source tokenizer metadata after save_pretrained so the
-    # exporter can preserve the exact BOS/EOS/PAD/UNK/CLS/MASK/SEP id mapping.
+    # Restore exact source tokenizer metadata for the byte-BPE exporter.
     tokenizer_files = (
-        "vocab.json",
-        "merges.txt",
-        "tokenizer.json",
-        "tokenizer_config.json",
-        "special_tokens_map.json",
-        "added_tokens.json",
+        "vocab.json", "merges.txt", "tokenizer.json", "tokenizer_config.json",
+        "special_tokens_map.json", "added_tokens.json",
     )
     for filename in tokenizer_files:
         source_file = Path(snapshot) / filename
