@@ -4,45 +4,39 @@
 
 - [x] 1/5 — audit du périmètre et des dépendances.
 - [x] 2/5 — extraction du code, des tests, des outils et des assets dans le dépôt Nexus.
-- [~] 3/5 — univers original et moteur narratif français hors ligne validés en CI ; le LLM génératif reste expérimental et non approuvé.
-- [ ] 4/5 — interfaces de plateforme, adaptateur Cardputer/ROZA et intégration du moteur narratif.
+- [~] 3/5 — univers original, règles décrites et moteur narratif autonome ; validation de contenu en cours.
+- [ ] 4/5 — interfaces de plateforme, adaptateur Cardputer/ROZA et intégration des trois mondes, des fiches, des jets et des journaux.
 - [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV avec l'utilisateur.
 
 ## Canon narratif actif
 
-L'univers actif est **Nexus — L'Atlas des Rémanences**. L'histoire se déroule autour de Valbrume en 1987. Le mystère central est la Rémanence : le retour irrégulier de fragments d'informations dans des archives et des signaux. LIA signifie Lecteur d'Indices Acoustiques. Le vocabulaire, les groupes, les personnages et les règles sont définis dans `docs/UNIVERSE.md`.
+L'univers actif est **Nexus : L'Odyssée Arcane**. La campagne commence à Marcheprime en 1984 et met en scène trois dimensions : la Terre, le royaume enchanté d'Avelune conquis par Varkhël, et le Revers dont il est originaire. Les Seuils relient les trois mondes. Le joueur contrôle Craissant ; le MJ contrôle Manée, Woodsam et tous les PNJ. Les détails sont définis dans docs/UNIVERSE.md.
 
 ## Changements de l'étape 3
 
-- Les fichiers de jeu et identifiants ont été renommés vers le préfixe `nexus_*` et le namespace C++ `nexus`.
-- Les événements narratifs de créatures et de brèches ont été remplacés par des empreintes rémanentes et des ondes de résonance, sans changer l'ordre numérique des événements sauvegardés.
-- L'écran de premier contact, les objectifs, les missions, les libellés et les exemples du narrateur ont été réécrits.
-- Un corpus de dialogues français originaux de Valbrume/LIA est conservé dans tools/model/seed_fr.jsonl pour les expérimentations de modèle.
-- Le pipeline exclut les références distinctives de l'ancienne fiction dans les données publiques et le corpus original.
-- Un garde-fou lexical refuse une sortie contenant ces références.
-- Un moteur narratif déterministe autonome fournit des scènes originales pour les choix de premier contact, les événements, les découvertes, les archives, les missions et les périodes calmes.
-- La sélection de scènes varie selon la graine, le jour, le secteur, la séquence d'événement, les preuves et la relation avec LIA, sans modifier l'état du jeu.
-- Huit jalons d'intrigue sont définis pour la mémoire persistante : premier signal résolu, signal décodé, trois secteurs cartographiés, archive d'Alma retrouvée, contacts du Cercle/Bureau/Collecteurs et motif de résonance connu. Les huit bits correspondent à `NarrativeMemory::plotFlags`.
-- Le workflow `Nexus narrative engine verification` a réussi le 24 novembre 2026 sur le commit `67665675861c59a2d18694d8cd18f6fe7591d492` : tests du monde, exploration, personnage, missions, aventure, mémoire narrative, scènes, jalons persistants et garde-fous avec ASan/UBSan ; test hôte du moteur LLM également réussi.
-- Les exemples d'entraînement sont désormais tronqués à une frontière de mot/phrase et alignés sur la limite de neuf tokens de texte du profil embarqué.
-- La pondération des dialogues originaux Nexus a été renforcée ; les exemples incompatibles avec cette petite fenêtre sont écartés et comptabilisés plutôt que de faire échouer tout l'entraînement.
-- Un contrôle distinct rejette les échantillons vides, génériques, répétitifs ou inachevés.
-- Un vérificateur dédié contrôle les empreintes SHA-256, les tailles, le manifeste, le format du modèle et la provenance du corpus.
-- Le workflow exécute les tests natifs du moteur de jeu et les tests hôte de sécurité du moteur LLM.
-- Après une reconstruction réussie, un second workflow charge le véritable CRDP v3 et CTK2 dans le moteur C++ sur hôte, encode un prompt et exécute plusieurs pas d'inférence déterministe.
-- Les anciennes clés NVS `hawkins` et le dossier SD `/HAWKINS` restent conservés pour les sauvegardes antérieures ; ce sont des identifiants techniques de compatibilité, pas des éléments du monde.
-- Les anciens documents narratifs importés ont été retirés de Nexus ; la copie historique d'origine reste dans `Roza`.
+- Les fichiers de jeu et identifiants ont été renommés vers le préfixe nexus_* et le namespace C++ nexus.
+- Le canon narratif a été réaligné sur Marcheprime en 1984, les trois dimensions, le royaume conquis, Varkhël et les Seuils utilisés pour envoyer des créatures sur Terre.
+- Les scènes du moteur C++ incluent maintenant la manifestation d'un Seuil, le passage d'une créature, la découverte d'Avelune, l'influence du Revers et les interventions de Manée et Woodsam.
+- Le corpus tools/model/seed_fr.jsonl appartient à l'ancien prototype Valbrume/LIA ; il n'est plus canonique et doit être réécrit avant tout nouvel entraînement publié.
+- Un garde-fou lexical refuse une sortie contenant les références distinctives de l'œuvre précédente.
+- Le moteur narratif déterministe autonome reste hors ligne, sans allocation dynamique, et ne peut modifier les choix de Craissant ou l'état du jeu.
+- Les huit bits d'intrigue sont conservés dans le format de sauvegarde. Leur signification sera réalignée sur les trois mondes et les personnages pendant l'étape 4, sans modifier le format binaire.
+- Le workflow de narration a réussi le 24 novembre 2026 sur le commit 67665675861c59a2d18694d8cd18f6fe7591d492 ; le moteur devra être retesté après les derniers changements du canon.
 
-## Modèle local et stratégie de narration
+## Modèle local
 
-Le petit LeCarnet-3M n'est pas approuvé comme narrateur principal. La vérification du 24 novembre 2026 a confirmé 3 742 144 paramètres, un contexte de 32 tokens et une génération limitée à neuf tokens de texte. Le dernier entraînement a atteint une perte d'entraînement de 1,9065 mais une meilleure perte de validation de 6,4704 après huit époques. Les quatre échantillons produits étaient incohérents ; le contrôle qualité a échoué avant l'export, la vérification des nouveaux assets et le test d'inférence C++.
+Le petit LeCarnet-3M n'est pas approuvé comme MJ autonome. Le dernier entraînement vérifié le 24 novembre 2026 a obtenu une meilleure perte de validation de 6,4704 et produit des phrases incohérentes ; le contrôle qualité a échoué avant export, vérification du nouvel asset et test d'inférence C++.
 
-Le moteur narratif fiable est src/narrator/nexus_narrative_engine.cpp. Il propose plusieurs formulations originales par scène, choisit de façon reproductible selon le contexte sauvegardé et adapte son degré de certitude aux preuves et à la relation avec LIA. Il reste hors ligne, sans allocation dynamique, et ne peut modifier ni les choix ni l'état du jeu. Les tests natifs complets et le test hôte LLM ont passé sur le commit `67665675861c59a2d18694d8cd18f6fe7591d492` le 24 novembre 2026.
+Le corpus du modèle appartient à l'ancien prototype Valbrume/LIA et doit être remplacé avant tout nouvel entraînement. Le modèle génératif reste expérimental ; le moteur déterministe et les données sauvegardées sont les autorités.
 
-Le workflow de reconstruction du LLM est manuel uniquement. Les assets antérieurs restent expérimentaux : un manifeste valide, un format CRDP conforme et des sommes SHA-256 correctes ne suffisent pas à prouver une qualité linguistique.
+## Éléments définis pour la campagne
 
-Voir docs/NARRATIVE_ARCHITECTURE.md pour les choix de conception, les références et les critères de validation.
+- La répartition des rôles MJ/joueur et les trois fiches de personnages sont documentées dans docs/CHARACTERS_AND_LOGBOOKS.md.
+- Les règles proposées de d20, difficultés, conflits, PV et mort sont dans docs/ROLEPLAY_RULES.md ; leur intégration au moteur n'est pas terminée.
+- Les journaux de Craissant, Manée et Woodsam, avec séparation faits/hypothèses/questions, sont spécifiés dans docs/CHARACTERS_AND_LOGBOOKS.md.
+- Le prologue de Marcheprime en 1984 est documenté dans docs/CAMPAIGN_PROLOGUE.md.
+- Les références Yarn Spinner et ink sont consignées dans docs/NARRATIVE_ARCHITECTURE.md.
 
 ## Limites restantes
 
-Le contrôleur Cardputer conservé sous `src/platform/cardputer/legacy/` référence encore des services ROZA. Le dépôt Nexus n'est pas encore une cible de firmware autonome ; cet adaptateur sera séparé à l'étape 4. L'étape 5 reste réservée au binaire installable et aux essais physiques de l'utilisateur.
+Le contrôleur Cardputer conservé sous src/platform/cardputer/legacy/ référence encore des services ROZA. Le dépôt Nexus n'est pas encore une cible de firmware autonome ; l'étape 4 devra relier les trois dimensions, les personnages, les jets, les journaux et l'affichage Cardputer. L'étape 5 reste réservée au binaire installable et aux essais physiques de l'utilisateur.
