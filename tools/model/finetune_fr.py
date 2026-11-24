@@ -81,7 +81,7 @@ def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, li
     available = max_length - len(prefix)
     if available < 3:
         raise RuntimeError("Le préfixe consomme toute la fenêtre de contexte.")
-    reply = encode_complete_reply(row["response"], tokenizer, available - 1)
+    reply = encode_complete_reply(row["response"], tokenizer, min(available - 1, 9))
     target = reply + [eos]
     ids = prefix + target
     labels = [-100] * len(prefix) + target

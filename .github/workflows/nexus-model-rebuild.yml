@@ -154,7 +154,7 @@ jobs:
 
       - name: Verify published hashes and model provenance
         run: |
-          sha256sum -c src/narrator/local_llm/assets/SHA256SUMS.txt --directory=src/narrator/local_llm/assets
+          (cd src/narrator/local_llm/assets && sha256sum -c SHA256SUMS.txt)
           python tools/model/verify_published_assets.py
 
       - name: Run native Nexus core regression tests
