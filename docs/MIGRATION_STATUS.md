@@ -4,7 +4,7 @@
 
 - [x] 1/5 — audit du périmètre et des dépendances.
 - [x] 2/5 — extraction du code, des tests, des outils et des assets dans le dépôt Nexus.
-- [~] 3/5 — univers original et moteur narratif français hors ligne ajoutés ; validation CI en cours. Le LLM génératif reste expérimental.
+- [~] 3/5 — univers original et moteur narratif français hors ligne validés en CI ; le LLM génératif reste expérimental et non approuvé.
 - [ ] 4/5 — interfaces de plateforme, adaptateur Cardputer/ROZA et intégration du moteur narratif.
 - [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV avec l'utilisateur.
 
@@ -22,6 +22,8 @@ L'univers actif est **Nexus — L'Atlas des Rémanences**. L'histoire se déroul
 - Un garde-fou lexical refuse une sortie contenant ces références.
 - Un moteur narratif déterministe autonome fournit des scènes originales pour les choix de premier contact, les événements, les découvertes, les archives, les missions et les périodes calmes.
 - La sélection de scènes varie selon la graine, le jour, le secteur, la séquence d'événement, les preuves et la relation avec LIA, sans modifier l'état du jeu.
+- Huit jalons d'intrigue sont définis pour la mémoire persistante : premier signal résolu, signal décodé, trois secteurs cartographiés, archive d'Alma retrouvée, contacts du Cercle/Bureau/Collecteurs et motif de résonance connu. Les huit bits correspondent à `NarrativeMemory::plotFlags`.
+- Le workflow `Nexus narrative engine verification` a réussi le 24 novembre 2026 sur le commit `67665675861c59a2d18694d8cd18f6fe7591d492` : tests du monde, exploration, personnage, missions, aventure, mémoire narrative, scènes, jalons persistants et garde-fous avec ASan/UBSan ; test hôte du moteur LLM également réussi.
 - Les exemples d'entraînement sont désormais tronqués à une frontière de mot/phrase et alignés sur la limite de neuf tokens de texte du profil embarqué.
 - La pondération des dialogues originaux Nexus a été renforcée ; les exemples incompatibles avec cette petite fenêtre sont écartés et comptabilisés plutôt que de faire échouer tout l'entraînement.
 - Un contrôle distinct rejette les échantillons vides, génériques, répétitifs ou inachevés.
@@ -35,7 +37,7 @@ L'univers actif est **Nexus — L'Atlas des Rémanences**. L'histoire se déroul
 
 Le petit LeCarnet-3M n'est pas approuvé comme narrateur principal. La vérification du 24 novembre 2026 a confirmé 3 742 144 paramètres, un contexte de 32 tokens et une génération limitée à neuf tokens de texte. Le dernier entraînement a atteint une perte d'entraînement de 1,9065 mais une meilleure perte de validation de 6,4704 après huit époques. Les quatre échantillons produits étaient incohérents ; le contrôle qualité a échoué avant l'export, la vérification des nouveaux assets et le test d'inférence C++.
 
-Le moteur narratif fiable est src/narrator/nexus_narrative_engine.cpp. Il propose plusieurs formulations originales par scène, choisit de façon reproductible selon le contexte sauvegardé et adapte son degré de certitude aux preuves et à la relation avec LIA. Il reste hors ligne, sans allocation dynamique, et ne peut modifier ni les choix ni l'état du jeu.
+Le moteur narratif fiable est src/narrator/nexus_narrative_engine.cpp. Il propose plusieurs formulations originales par scène, choisit de façon reproductible selon le contexte sauvegardé et adapte son degré de certitude aux preuves et à la relation avec LIA. Il reste hors ligne, sans allocation dynamique, et ne peut modifier ni les choix ni l'état du jeu. Les tests natifs complets et le test hôte LLM ont passé sur le commit `67665675861c59a2d18694d8cd18f6fe7591d492` le 24 novembre 2026.
 
 Le workflow de reconstruction du LLM est manuel uniquement. Les assets antérieurs restent expérimentaux : un manifeste valide, un format CRDP conforme et des sommes SHA-256 correctes ne suffisent pas à prouver une qualité linguistique.
 
