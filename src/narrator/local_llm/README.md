@@ -21,6 +21,8 @@ Le workflow de l'étape 3 publie les fichiers suivants dans `assets/` :
 
 Les sommes SHA-256 et le manifeste doivent être vérifiés avant d'accepter un export comme version finale de Nexus. Le premier export a passé les contrôles de structure, mais ses premiers échantillons comportaient des phrases coupées et des répétitions ; il reste provisoire tant que le nouvel entraînement et les contrôles qualité du workflow ne sont pas terminés.
 
+Après la publication d'un export par le pipeline, le workflow `nexus-inference-verify.yml` charge ces deux binaires dans le moteur C++ sur hôte, encode un prompt et vérifie l'exécution de plusieurs pas d'inférence. Ce test confirme que le format exporté est réellement consommable par le moteur, sans constituer un essai de performance sur l'ESP32-S3.
+
 `model_data.S` incorpore les deux binaires dans l'image applicative et expose les symboles de début/fin. Le runtime les lit directement depuis la Flash mappée. La microSD n'est pas utilisée pour charger les poids du narrateur.
 
 ## Runtime et responsabilités
@@ -36,4 +38,4 @@ Un chargement invalide, un manque de mémoire ou une génération vide doit dés
 
 ## Frontières des étapes
 
-La validation complète du corpus et du modèle relève de l'étape 3. Le découplage de l'adaptateur Cardputer et son intégration autonome dans le firmware ROZA relèvent de l'étape 4. Les mesures mémoire réelles, la vitesse, la stabilité et les essais sur le vrai Cardputer ADV relèvent de l'étape 5.
+La validation complète du corpus, des sorties, des assets et de l'inférence hôte relève de l'étape 3. Le découplage de l'adaptateur Cardputer et son intégration autonome dans le firmware ROZA relèvent de l'étape 4. Les mesures mémoire réelles, la vitesse, la stabilité et les essais sur le vrai Cardputer ADV relèvent de l'étape 5.
