@@ -21,7 +21,7 @@ L'univers actif est **Nexus : L'Odyssée Arcane**. La campagne commence à March
 - Un garde-fou lexical refuse une sortie contenant les références distinctives de l'œuvre précédente.
 - Le moteur narratif déterministe autonome reste hors ligne, sans allocation dynamique, et ne peut modifier les choix de Craissant ou l'état du jeu.
 - Les huit bits d'intrigue sont conservés dans le format de sauvegarde. Leur signification sera réalignée sur les trois mondes et les personnages pendant l'étape 4, sans modifier le format binaire.
-- Le workflow de narration a réussi le 24 novembre 2026 sur le commit 67665675861c59a2d18694d8cd18f6fe7591d492 ; le moteur devra être retesté après les derniers changements du canon.
+- Le workflow de narration a réussi le 24 novembre 2026 sur le commit af7592f232705f6ac0810248c252929200a2154b (run 45408391743) : tests du monde, exploration, personnage, missions, aventure, mémoire narrative, scènes des trois dimensions et garde-fous avec ASan/UBSan ; test hôte du moteur LLM également réussi.
 
 ## Modèle local
 
