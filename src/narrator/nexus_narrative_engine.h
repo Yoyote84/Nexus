@@ -31,6 +31,7 @@ enum class NarrativeScene : uint8_t {
 // Instantané en lecture seule : le narrateur ne reçoit aucun pointeur vers
 // les structures mutables du monde, de l'inventaire ou des sauvegardes.
 struct NexusNarrativeContext {
+  NarrativeScene scene;
   uint32_t worldSeed;
   uint32_t eventSequence;
   uint32_t simulatedDay;
