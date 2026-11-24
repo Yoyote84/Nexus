@@ -36,7 +36,7 @@ NEXUS_SCENE_BANK(kFirstContactInvestigate,
     "Manée compare les trois impulsions, sans prétendre connaître leur origine.");
 
 NEXUS_SCENE_BANK(kFirstContactRetreat,
-    "Tu décides de prendre du recul ; LIA archive le signal sans le poursuivre.",
+    "Tu décides de prendre du recul ; Woodsam archive le signal sans le poursuivre.",
     "Tu refuses de suivre une piste incertaine ; le relevé reste dans l'Atlas.",
     "Tu mets l'appareil en veille ; la découverte est conservée dans le carnet.",
     "Tu choisis la prudence ; rien ne t'oblige à poursuivre cette piste aujourd'hui.");
@@ -53,7 +53,7 @@ NEXUS_SCENE_BANK(kStrangeSignal,
     "Une fréquence s'ouvre quelques secondes, puis retombe dans le silence.",
     "Le même motif apparaît deux fois avec un léger décalage.",
     "Un signal faible traverse le bruit radio ; sa durée est désormais consignée.",
-    "La station Veyrac relève un motif absent des balises habituelles.");
+    "Un relais abandonné relève un motif absent des balises habituelles.");
 
 NEXUS_SCENE_BANK(kPowerAnomaly,
     "Les mesures électriques chutent, puis reviennent à leur niveau initial.",
@@ -67,7 +67,7 @@ NEXUS_SCENE_BANK(kResidualTrace,
     "Une empreinte ancienne semble se répéter avec un léger décalage.",
     "Le bruit de fond contient une forme déjà relevée dans le carnet.",
     "Une mesure revient après plusieurs jours ; sa provenance reste à vérifier.",
-    "LIA retrouve une ressemblance entre deux fragments conservés séparément.");
+    "Manée retrouve une ressemblance entre deux fragments conservés séparément.");
 
 NEXUS_SCENE_BANK(kFactionMovement,
     "Les Sentinelles d'Avelune changent leurs signaux pour éviter les patrouilles.",
@@ -79,7 +79,7 @@ NEXUS_SCENE_BANK(kFactionMovement,
 NEXUS_SCENE_BANK(kDistressCall,
     "Une voix semble traverser le bruit radio, sans être clairement identifiable.",
     "Un fragment ressemble à un appel à l'aide, mais son origine reste inconnue.",
-    "La bande contient une syllabe répétée que LIA ne peut pas attribuer.",
+    "La bande contient une syllabe répétée que Manée ne parvient pas à attribuer.",
     "Une voix inconnue traverse le grésillement ; impossible de dire si elle vient d'Avelune ou du Revers.");
 
 NEXUS_SCENE_BANK(kResonanceWave,
@@ -134,7 +134,7 @@ NEXUS_SCENE_BANK(kMissionCompleted,
 
 NEXUS_SCENE_BANK(kQuietObservation,
     "Rien de nouveau n'apparaît dans les mesures.",
-    "La fréquence reste silencieuse ; LIA conserve le dernier état connu.",
+    "La fréquence reste silencieuse ; Woodsam consigne le dernier état connu.",
     "Aucune empreinte nouvelle n'est détectée dans ce relevé.",
     "Le carnet ne reçoit aucune anomalie aujourd'hui ; le calme est aussi une donnée.");
 
