@@ -17,7 +17,7 @@ L'univers actif est **Nexus — L'Atlas des Rémanences**. L'histoire se déroul
 - Les fichiers de jeu et identifiants ont été renommés vers le préfixe `nexus_*` et le namespace C++ `nexus`.
 - Les événements narratifs de créatures et de brèches ont été remplacés par des empreintes rémanentes et des ondes de résonance, sans changer l'ordre numérique des événements sauvegardés.
 - L'écran de premier contact, les objectifs, les missions, les libellés et les exemples du narrateur ont été réécrits.
-- Un corpus initial de 40 dialogues français originaux de Valbrume/LIA est disponible dans `tools/model/seed_fr.jsonl`.
+- Un corpus enrichi de 120 dialogues français originaux de Valbrume/LIA est disponible dans `tools/model/seed_fr.jsonl`.
 - Le pipeline exclut les références distinctives de l'ancienne fiction dans les données publiques et le corpus original.
 - Un garde-fou lexical refuse une sortie du narrateur contenant ces références.
 - Les exemples d'entraînement sont désormais tronqués à une frontière de mot/phrase et alignés sur la limite de neuf tokens de texte du profil embarqué.
@@ -33,7 +33,7 @@ L'univers actif est **Nexus — L'Atlas des Rémanences**. L'histoire se déroul
 
 Le premier export CRDP v3/CTK2 a passé les contrôles structurels et ses sommes SHA-256 ont été publiées. Toutefois, les premiers échantillons générés montraient des phrases coupées et des répétitions : ce modèle n'est donc pas approuvé comme narrateur Nexus final.
 
-Le pipeline a été corrigé pour préserver les frontières de mots/phrases, renforcer l'apprentissage sur les dialogues originaux, écarter et compter les exemples incompatibles, contrôler les sorties générées et revérifier les assets publiés. La reconstruction relancée doit terminer avec succès ; le nouveau workflow doit ensuite prouver que le moteur C++ charge ces fichiers et réalise une inférence réelle. L'étape 3 reste ouverte jusqu'à la réussite de ces contrôles.
+Le pipeline a été corrigé pour préserver les frontières de mots/phrases, renforcer l'apprentissage sur les dialogues originaux, écarter et compter les exemples incompatibles, contrôler les sorties générées et revérifier les assets publiés. La reconstruction relancée utilise 120 dialogues originaux (16 répétitions pour l'apprentissage, validation indépendante) et doit terminer avec succès ; le nouveau workflow doit ensuite prouver que le moteur C++ charge ces fichiers et réalise une inférence réelle. L'étape 3 reste ouverte jusqu'à la réussite de ces contrôles.
 
 La taille de mémoire dynamique figurant au manifeste est une estimation arithmétique, pas une mesure sur le matériel. La mémoire libre réelle, les performances et la stabilité seront contrôlées à l'étape 5.
 

@@ -29,7 +29,7 @@ Lire `docs/UNIVERSE.md`, `docs/NARRATIVE_STYLE.md` et `docs/ORIGINALITY_AND_PROV
 
 - [x] 1/5 — audit.
 - [x] 2/5 — extraction dans ce dépôt.
-- [~] 3/5 — univers, textes et corpus originaux terminés ; reconstruction et validation qualité du narrateur en cours.
+- [~] 3/5 — univers et corpus de 120 dialogues originaux terminés ; reconstruction et validation qualité du narrateur en cours.
 - [ ] 4/5 — adaptation et intégration dans le firmware ROZA.
 - [ ] 5/5 — firmware installable et essais Cardputer.
 
