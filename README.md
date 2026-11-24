@@ -29,10 +29,10 @@ Lire `docs/UNIVERSE.md`, `docs/NARRATIVE_STYLE.md` et `docs/ORIGINALITY_AND_PROV
 
 - [x] 1/5 — audit.
 - [x] 2/5 — extraction dans ce dépôt.
-- [~] 3/5 — univers et corpus de 120 dialogues originaux terminés ; reconstruction et validation qualité du narrateur en cours.
-- [ ] 4/5 — adaptation et intégration dans le firmware ROZA.
-- [ ] 5/5 — firmware installable et essais Cardputer.
+- [~] 3/5 — moteur narratif français hors ligne ajouté ; validation native en cours. Le petit LLM reste expérimental.
+- [ ] 4/5 — adaptation et intégration du moteur narratif dans le firmware ROZA.
+- [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV.
 
-Le premier export du narrateur a passé les contrôles de structure, mais ses échantillons révélaient des phrases inachevées. Le pipeline a été corrigé : l'étape 3 restera ouverte jusqu'à ce que le nouvel entraînement, les contrôles de qualité, les sommes SHA-256 et les tests natifs réussissent.
+Le dernier réentraînement de LeCarnet-3M a échoué au contrôle de qualité : ses sorties françaises n'étaient pas cohérentes. Nexus privilégie désormais un moteur de scènes déterministe et évolutif, fondé sur les choix et les données réellement sauvegardés. Le modèle génératif ne sera utilisé qu'après avoir prouvé sa qualité.
 
 Les clés de sauvegarde historiques restent compatibles ; voir `docs/migration/LEGACY_SOURCE_NOTES.md`.

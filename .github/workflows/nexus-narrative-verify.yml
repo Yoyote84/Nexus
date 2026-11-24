@@ -1,0 +1,27 @@
+name: Nexus narrative engine verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/narrator/nexus_narrative_engine.*"
+      - "src/narrator/nexus_lore_guard.*"
+      - "tests/nexus_core/**"
+      - ".github/workflows/nexus-narrative-verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-narrative:
+    name: Compile and verify the offline French narrator
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Nexus
+        uses: actions/checkout@v4
+      - name: Run native core and narrative regression tests
+        run: SAN=1 bash tests/nexus_core/build.sh
+      - name: Run local LLM host safety regression tests
+        run: bash tests/nexus_llm/build.sh

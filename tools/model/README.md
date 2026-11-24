@@ -1,17 +1,28 @@
-# Narrateur local français de Nexus
+# Modèle local expérimental — Nexus
 
-Le pipeline entraîne et exporte le petit modèle de narration destiné au Cardputer ADV.
+Le modèle LeCarnet-3M et son moteur C++ restent disponibles pour les expérimentations, mais **ils ne sont pas la source principale de narration de Nexus** tant qu'ils ne réussissent pas les contrôles de qualité.
 
-- Modèle de base : `MaxLSB/LeCarnet-3M`, révision épinglée dans le workflow.
-- Corpus de spécialisation : `seed_fr.jsonl`, 120 dialogues originaux de Valbrume, LIA et la Rémanence.
-- Données publiques complémentaires : OpenAssistant/OASST1 et Alpaca GPT-4 French, sous réserve de leurs licences et filtres.
-- Export firmware : CRDP v3 LLaMA Q4_0 row-planar + tokenizer CTK2 byte-level BPE.
-- Fenêtre d'inférence du Cardputer : 32 tokens ; neuf tokens de texte maximum par génération.
+## Limites mesurées
 
-Le workflow `nexus-model-rebuild.yml` reconstruit les poids, le tokenizer, les sommes SHA-256 et le manifeste. Il contrôle les références narratives distinctives de l'ancien univers dans les données et les échantillons générés. Le contrôle qualité rejette les réponses vides, génériques, répétitives ou inachevées. Les fichiers publiés sont revérifiés avec `verify_published_assets.py`.
+- Modèle de base : MaxLSB/LeCarnet-3M, révision 0bf134cfceb1b00c7c56a0ebbc1560ec634c3502, licence MIT.
+- Export : CRDP v3 LLaMA Q4_0 row-planar ; tokenizer CTK2.
+- Profil du firmware : contexte de 32 tokens et maximum de 9 tokens de texte par génération.
+- Le dernier essai sur GitHub Actions (24 novembre 2026) a entraîné 3 742 144 paramètres pendant 8 époques. La perte d'entraînement est descendue à 1,9065, tandis que la meilleure perte de validation est restée à 6,4704.
+- Les sorties de test n'étaient pas exploitables. Le contrôle qualité a échoué avant l'export et avant le test d'inférence du nouveau modèle.
 
-Le premier modèle exporté avait passé la validation structurelle, mais ses échantillons révélaient des coupures en plein mot et des répétitions. L'entraînement a donc été corrigé : frontière de phrase/mot pour les réponses, corpus Nexus plus fortement pondéré (16 répétitions), plafond de neuf tokens et comptage explicite des lignes impossibles à encoder.
+La structure binaire de l'ancien export et ses sommes SHA-256 valides prouvent seulement que les fichiers sont lisibles et conformes au format. Elles ne prouvent pas la qualité linguistique ni la fiabilité narrative.
 
-Après réussite de la reconstruction, `nexus-inference-verify.yml` compile le vrai moteur C++ avec les stubs hôte, charge les fichiers CRDP v3/CTK2 publiés, encode un prompt français court et exécute plusieurs pas d'inférence déterministe. L'étape 3 n'est achevée qu'après réussite de l'entraînement, de la qualité des échantillons, des empreintes SHA-256, des tests natifs et de cette inférence hôte.
+## Stratégie approuvée
 
-Le narrateur propose uniquement du texte et des pistes. Le moteur déterministe conserve l'autorité sur les statistiques, l'inventaire, les missions, les choix et les sauvegardes.
+Le narrateur principal est le moteur déterministe src/narrator/nexus_narrative_engine.cpp. Il sélectionne des scènes originales selon les événements, les choix, les preuves, la chronologie et la relation avec LIA. Il fonctionne entièrement hors ligne, sans allocation dynamique, et n'altère jamais l'état du jeu.
+
+Le modèle LeCarnet ne pourra être réactivé comme source de texte que lorsqu'un entraînement distinct passera :
+1. la validation sur des exemples tenus à l'écart de l'entraînement ;
+2. les contrôles de français naturel, de phrase complète et de pertinence Nexus ;
+3. les garde-fous de sécurité et d'originalité ;
+4. le chargement et l'inférence réels dans le moteur C++ ;
+5. les mesures de mémoire et de temps sur le matériel cible.
+
+Le workflow nexus-model-rebuild.yml est donc manuel uniquement. Il ne bloque plus les tests du moteur narratif et ne publie pas automatiquement un modèle simplement parce que son export est structurellement valide.
+
+Voir docs/NARRATIVE_ARCHITECTURE.md pour la stratégie complète.

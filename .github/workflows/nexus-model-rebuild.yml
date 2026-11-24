@@ -1,20 +1,6 @@
-name: Nexus local narrator rebuild
+name: Nexus experimental LeCarnet rebuild (manual only)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "tools/model/seed_fr.jsonl"
-      - "tools/model/prepare_fr_dataset.py"
-      - "tools/model/finetune_fr.py"
-      - "tools/model/convert_lecarnet.py"
-      - "tools/model/verify_lecarnet_export.py"
-      - "tools/model/verify_published_assets.py"
-      - "tools/model/verify_narrator_samples.py"
-      - "tools/model/check_narrator_lore.py"
-      - ".github/workflows/nexus-model-rebuild.yml"
-      - "tests/nexus_core/**"
-      - "tests/nexus_llm/**"
   workflow_dispatch:
 
 permissions:
