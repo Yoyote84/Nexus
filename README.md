@@ -29,10 +29,10 @@ Lire `docs/UNIVERSE.md`, `docs/NARRATIVE_STYLE.md` et `docs/ORIGINALITY_AND_PROV
 
 - [x] 1/5 — audit.
 - [x] 2/5 — extraction dans ce dépôt.
-- [~] 3/5 — moteur narratif français hors ligne ajouté ; validation native en cours. Le petit LLM reste expérimental.
+- [~] 3/5 — moteur narratif français hors ligne compilé et validé en CI ; LeCarnet-3M reste expérimental et non approuvé.
 - [ ] 4/5 — adaptation et intégration du moteur narratif dans le firmware ROZA.
 - [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV.
 
-Le dernier réentraînement de LeCarnet-3M a échoué au contrôle de qualité : ses sorties françaises n'étaient pas cohérentes. Nexus privilégie désormais un moteur de scènes déterministe et évolutif, fondé sur les choix et les données réellement sauvegardés. Le modèle génératif ne sera utilisé qu'après avoir prouvé sa qualité.
+Le moteur narratif autonome passe ses tests natifs avec AddressSanitizer et UndefinedBehaviorSanitizer. Il combine des scènes originales, des variantes reproductibles et huit jalons d'intrigue persistants, sans inventer les actions ou les objets du joueur. Le dernier réentraînement de LeCarnet-3M a échoué au contrôle de qualité ; il reste désactivé comme source principale tant qu'il ne produit pas un français fiable.
 
 Les clés de sauvegarde historiques restent compatibles ; voir `docs/migration/LEGACY_SOURCE_NOTES.md`.
