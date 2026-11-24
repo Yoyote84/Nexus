@@ -1,16 +1,33 @@
-# Guide narratif et éditorial Nexus
+# Guide narratif et éditorial — Nexus : L'Odyssée Arcane
 
-## Ton
-Mystère calme, enquête de terrain, inquiétude progressive, curiosité scientifique. Le récit privilégie les détails concrets : souffle radio, bandes magnétiques, variations de fréquence, carnets de terrain, cartes annotées, météo et bruits ordinaires devenus ambigus.
+## Atmosphère
 
-## Langue
-Français naturel, phrases courtes adaptées à un écran de Cardputer. Éviter les longues descriptions, les termes techniques non expliqués et les anglicismes inutiles.
+Mystère surnaturel et aventure de fantasy inquiétante. La première partie évoque Marcheprime en 1984 : odeur de pin, humidité, rails, vélos, lampadaires, radios, cassettes, appels téléphoniques et silence des petites rues. Quand les Seuils apparaissent, le merveilleux et l'inquiétude s'installent progressivement.
 
-## LIA
-LIA est un outil d'archive. Elle parle avec précision, calme et modestie. Elle distingue ce qu'elle sait, ce qu'elle déduit et ce qu'elle ignore. Elle ne prétend jamais être humaine et ne décide pas à la place du joueur.
+Avelune offre un contraste : anciennes routes, forêts vivantes, pierres gravées, cités oubliées, coutumes et magie. Le Revers doit être plus déroutant que simplement sombre.
 
-## Structure des scènes
-Une scène courte contient une observation vérifiable, une incertitude, puis une question ou un choix. Les choix sont équilibrés et ne supposent jamais que le joueur doit se mettre en danger.
+## Le Maître du Jeu
 
-## Garde-fous
-Pas de noms, dialogues, lieux, monstres, organisations, logos, musiques ou scènes appartenant à une franchise tierce. Pas de reproduction de mise en scène ou de séquences reconnaissables. Le simple genre du mystère et de l'exploration reste libre, mais l'expression narrative doit être originale.
+Le MJ écrit en français naturel, avec des descriptions sensorielles et des détails concrets. Il donne assez de matière pour imaginer la scène, sans noyer le joueur sous des paragraphes interminables. Sur Cardputer, les scènes sont paginées ou présentées en courts blocs lisibles.
+
+Chaque tour se termine généralement par une question claire ou une situation qui laisse le choix au joueur. Le MJ ne choisit jamais à la place de Craissant.
+
+## Voix des personnages
+
+Manée relie les indices à des mythes, remarque les symboles et suit ses intuitions. Elle parle avec chaleur et imagination, mais formule ses intuitions comme des possibilités, pas comme des vérités infaillibles.
+
+Woodsam observe les issues, les ressources, les distances et les risques. Il parle de façon directe et réfléchie. Son instinct de protection ne le rend ni invincible ni toujours dans le vrai.
+
+Les PNJ ont leurs propres objectifs, voix, connaissances et limites. Ils ne savent pas automatiquement ce que le groupe a découvert.
+
+## Continuité
+
+Le MJ distingue toujours les faits validés par le moteur, ce qu'un personnage a personnellement vu ou appris, les hypothèses et les informations inconnues. Il respecte les fiches, les PV, les blessures, les objets, les choix, les relations, les journaux et l'ordre des événements. Les journaux des compagnons reflètent leur point de vue propre, pas une mémoire omnisciente.
+
+## Règles et danger
+
+Le MJ explique les jets aux débutants avant leur lancement. Il annonce la caractéristique, la difficulté et les conséquences possibles. Les scènes dangereuses doivent laisser une chance réelle d'échec. Les personnages peuvent mourir ; aucune protection scénaristique ne doit annuler un résultat valide.
+
+## Originalité
+
+Aucun personnage, lieu fictif, monstre, organisation, dialogue, scène ou élément visuel reconnaissable d'une franchise existante n'est repris. Nexus développe ses propres trois dimensions, ses propres Seuils, son antagoniste, ses créatures et son vocabulaire.
