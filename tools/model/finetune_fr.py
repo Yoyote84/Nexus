@@ -45,7 +45,7 @@ def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int]:
         candidate = sentence.strip()
         if candidate and candidate[-1] in ".!?…" :
             ids = encode(candidate)
-            if 2 <= len(ids) <= token_budget:
+            if 1 <= len(ids) <= token_budget:
                 return ids
 
     # If even the first sentence is too long, back off by whole words and close it.
@@ -57,7 +57,7 @@ def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int]:
         if candidate[-1] not in ".!?…":
             candidate += "."
         ids = encode(candidate)
-        if 2 <= len(ids) <= token_budget:
+        if 1 <= len(ids) <= token_budget:
             return ids
 
     raise RuntimeError("Impossible de conserver une réponse complète dans le budget Cardputer.")
