@@ -28,6 +28,24 @@ enum class NarrativeScene : uint8_t {
   Count
 };
 
+// Ces bits correspondent directement aux huit emplacements persistants de
+// NarrativeMemory::plotFlags. Ils donnent au récit des jalons durables.
+enum class NarrativePlotFlag : uint8_t {
+  FirstSignalResolved = 0,
+  SignalDecoded,
+  ThreeSectorsMapped,
+  AlmaArchiveFound,
+  CircleContacted,
+  BureauContacted,
+  CollectorsContacted,
+  ResonancePatternKnown
+};
+
+constexpr uint8_t narrativePlotMask(NarrativePlotFlag flag) {
+  const uint8_t index = static_cast<uint8_t>(flag);
+  return index < 8U ? static_cast<uint8_t>(1U << index) : 0U;
+}
+
 // Instantané en lecture seule : le narrateur ne reçoit aucun pointeur vers
 // les structures mutables du monde, de l'inventaire ou des sauvegardes.
 struct NexusNarrativeContext {
@@ -38,6 +56,7 @@ struct NexusNarrativeContext {
   uint32_t sectorKey;
   uint8_t intensity;
   uint8_t evidenceCount;
+  uint8_t plotFlags;
   uint8_t liaTrust;
 };
 

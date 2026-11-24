@@ -152,6 +152,23 @@ const char* contextLine(const NexusNarrativeContext& context,
   if (scene == NarrativeScene::DistressCall) {
     return "Si le danger est réel, contacte les secours par les moyens habituels.";
   }
+  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound)) != 0U) {
+    return "Les notes d'Alma offrent une piste supplémentaire à comparer aux mesures.";
+  }
+  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown)) != 0U) {
+    return "Le motif est mieux décrit ; son origine reste à établir.";
+  }
+  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::ThreeSectorsMapped)) != 0U) {
+    return "Trois secteurs peuvent maintenant être comparés dans l'Atlas.";
+  }
+  if ((context.plotFlags & (narrativePlotMask(NarrativePlotFlag::CircleContacted) |
+                            narrativePlotMask(NarrativePlotFlag::BureauContacted) |
+                            narrativePlotMask(NarrativePlotFlag::CollectorsContacted))) != 0U) {
+    return "Les témoignages sont conservés séparément des mesures vérifiées.";
+  }
+  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::SignalDecoded)) != 0U) {
+    return "Le motif est classé, mais l'identité de son émetteur demeure inconnue.";
+  }
   if (context.evidenceCount >= 8U) {
     return "Plusieurs relevés concordent ; leur origine reste à établir.";
   }

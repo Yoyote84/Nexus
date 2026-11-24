@@ -14,7 +14,7 @@ Nexus reprend ces idées, sans embarquer un moteur généraliste trop lourd pour
 - les variables persistantes sont lues depuis les sauvegardes existantes ;
 - plusieurs formulations originales sont disponibles pour chaque scène ;
 - une clé déterministe combine la graine du monde, le jour, le secteur et la séquence d'événement ;
-- les preuves et la relation avec LIA ajustent le ton et le degré de certitude ;
+- les preuves, les jalons d'intrigue persistants et la relation avec LIA ajustent le ton et le degré de certitude ;
 - la sélection d'un texte ne modifie jamais les règles du jeu.
 
 Références :
@@ -40,7 +40,7 @@ Les scènes couvrent :
 11. mission accomplie ;
 12. observation calme.
 
-Le moteur propose plusieurs formulations par scène. Il complète ensuite le texte selon les preuves déjà confirmées, l'intensité de l'événement, la confiance accordée à LIA et la chronologie. Un appel ambigu reçoit toujours un rappel de sécurité : le jeu ne remplace pas les secours réels.
+Le moteur propose plusieurs formulations par scène. Il complète ensuite le texte selon les preuves déjà confirmées, l'intensité de l'événement, les jalons d'intrigue persistants (signal résolu, motif décodé, trois secteurs cartographiés, carnet d'Alma retrouvé, contacts établis, motif de résonance compris), la confiance accordée à LIA et la chronologie. Les huit jalons correspondent exactement aux huit bits de `NarrativeMemory::plotFlags` ; l'étape 4 pourra donc les relier directement à la sauvegarde existante. Un appel ambigu reçoit toujours un rappel de sécurité : le jeu ne remplace pas les secours réels.
 
 La sélection est reproductible : un même état produit le même texte. Un changement de jour, de secteur, de séquence d'événement ou de progression peut produire une autre formulation. Cela évite les répétitions immédiates tout en facilitant les tests et la reprise après redémarrage.
 
@@ -58,7 +58,7 @@ Le modèle pourra être réévalué ultérieurement, mais uniquement derrière l
 
 ## Validation
 
-Le test tests/nexus_core/narrative_engine_test.cpp vérifie les scènes, la variation reproductible, la réaction aux preuves et à la confiance, le routage des événements et des choix, les appels ambigus, les limites de taille et le garde-fou d'originalité. Le workflow nexus-narrative-verify.yml exécute ces tests natifs avec les autres régressions du moteur.
+Le test tests/nexus_core/narrative_engine_test.cpp vérifie les scènes, la variation reproductible, la réaction aux preuves, aux huit jalons persistants et à la confiance, le routage des événements et des choix, les appels ambigus, les limites de taille et le garde-fou d'originalité. Le workflow nexus-narrative-verify.yml exécute ces tests natifs avec les autres régressions du moteur.
 
 ## Limite de l'étape 3
 

@@ -14,7 +14,7 @@ La structure binaire de l'ancien export et ses sommes SHA-256 valides prouvent s
 
 ## Stratégie approuvée
 
-Le narrateur principal est le moteur déterministe src/narrator/nexus_narrative_engine.cpp. Il sélectionne des scènes originales selon les événements, les choix, les preuves, la chronologie et la relation avec LIA. Il fonctionne entièrement hors ligne, sans allocation dynamique, et n'altère jamais l'état du jeu.
+Le narrateur principal est le moteur déterministe src/narrator/nexus_narrative_engine.cpp. Il sélectionne des scènes originales selon les événements, les choix, les preuves, les huit jalons d'intrigue persistants, la chronologie et la relation avec LIA. Il fonctionne entièrement hors ligne, sans allocation dynamique, et n'altère jamais l'état du jeu.
 
 Le modèle LeCarnet ne pourra être réactivé comme source de texte que lorsqu'un entraînement distinct passera :
 1. la validation sur des exemples tenus à l'écart de l'entraînement ;

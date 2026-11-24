@@ -77,6 +77,42 @@ static void testNarrativeReactsToEvidenceAndTrust() {
   assert(strcmp(cautious, corroborated) != 0);
 }
 
+static void testPersistentPlotFlagsChangeNarrative() {
+  NexusNarrativeContext context = sampleContext();
+  context.scene = NarrativeScene::ResidualTrace;
+  context.plotFlags = 0U;
+  context.evidenceCount = 1U;
+  context.liaTrust = 60U;
+  char baseline[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, baseline, sizeof(baseline)));
+
+  context.plotFlags = narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound);
+  char archive[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, archive, sizeof(archive)));
+  assert(strstr(archive, "Alma") != nullptr);
+  assert(strcmp(baseline, archive) != 0);
+
+  context.plotFlags = narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown);
+  char pattern[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, pattern, sizeof(pattern)));
+  assert(strstr(pattern, "motif") != nullptr);
+  assert(strcmp(archive, pattern) != 0);
+
+  context.plotFlags = narrativePlotMask(NarrativePlotFlag::ThreeSectorsMapped);
+  char map[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, map, sizeof(map)));
+  assert(strstr(map, "Trois secteurs") != nullptr);
+
+  assert(narrativePlotMask(NarrativePlotFlag::FirstSignalResolved) == 0x01U);
+  assert(narrativePlotMask(NarrativePlotFlag::SignalDecoded) == 0x02U);
+  assert(narrativePlotMask(NarrativePlotFlag::ThreeSectorsMapped) == 0x04U);
+  assert(narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound) == 0x08U);
+  assert(narrativePlotMask(NarrativePlotFlag::CircleContacted) == 0x10U);
+  assert(narrativePlotMask(NarrativePlotFlag::BureauContacted) == 0x20U);
+  assert(narrativePlotMask(NarrativePlotFlag::CollectorsContacted) == 0x40U);
+  assert(narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown) == 0x80U);
+}
+
 static void testEventAndChoiceRouting() {
   assert(narrativeSceneForEvent(EventType::StrangeSignal) == NarrativeScene::StrangeSignal);
   assert(narrativeSceneForEvent(EventType::PowerAnomaly) == NarrativeScene::PowerAnomaly);
@@ -126,6 +162,7 @@ int main() {
   testEverySceneProducesCompleteFrenchText();
   testDeterminismAndVariation();
   testNarrativeReactsToEvidenceAndTrust();
+  testPersistentPlotFlagsChangeNarrative();
   testEventAndChoiceRouting();
   testSafetyAndInvalidInput();
   puts("NEXUS: moteur narratif hors ligne, variantes, cohérence et garde-fous valides.");
