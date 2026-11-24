@@ -26,7 +26,7 @@ def read_jsonl(path: Path) -> list[dict[str, str]]:
     return rows
 
 
-def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int]:
+def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int] | None:
     """Keep a complete sentence or a word-boundary fragment, never cut BPE mid-word."""
     normalized = re.sub(r"\s+", " ", str(text or "")).strip()
     if not normalized or token_budget < 2:
@@ -60,10 +60,12 @@ def encode_complete_reply(text: str, tokenizer, token_budget: int) -> list[int]:
         if 1 <= len(ids) <= token_budget:
             return ids
 
-    raise RuntimeError("Impossible de conserver une réponse complète dans le budget Cardputer.")
+    # Certaines lignes atypiques ne peuvent pas produire une réponse entière
+    # dans neuf tokens : on les ignore explicitement au lieu de bloquer le build.
+    return None
 
 
-def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, list[int]]:
+def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, list[int]] | None:
     # Format d'entraînement LeCarnet reproduit sur le Cardputer.
     prefix = tokenizer.encode(f"User: {row['prompt']}\nBot:", add_special_tokens=False)
     eos = tokenizer.eos_token_id
@@ -82,12 +84,26 @@ def encode_pair(row: dict[str, str], tokenizer, max_length: int) -> dict[str, li
     if available < 3:
         raise RuntimeError("Le préfixe consomme toute la fenêtre de contexte.")
     reply = encode_complete_reply(row["response"], tokenizer, min(available - 1, 9))
+    if not reply:
+        return None
     target = reply + [eos]
     ids = prefix + target
     labels = [-100] * len(prefix) + target
     if len(ids) > max_length:
         raise RuntimeError("Paire encodée au-delà du contexte autorisé.")
     return {"input_ids": ids, "labels": labels}
+
+
+def encode_rows(rows: list[dict[str, str]], tokenizer, max_length: int):
+    encoded = []
+    skipped = 0
+    for row in rows:
+        item = encode_pair(row, tokenizer, max_length)
+        if item is None:
+            skipped += 1
+        else:
+            encoded.append(item)
+    return encoded, skipped
 
 
 def collate(rows: list[dict[str, list[int]]], pad_id: int) -> dict[str, torch.Tensor]:
@@ -192,8 +208,18 @@ def main() -> None:
     if len(train_rows) < 80 or len(val_rows) < 12:
         raise RuntimeError("Corpus insuffisant après préparation.")
 
-    train_data = [encode_pair(row, tokenizer, args.max_length) for row in train_rows]
-    val_data = [encode_pair(row, tokenizer, args.max_length) for row in val_rows]
+    train_data, skipped_train = encode_rows(train_rows, tokenizer, args.max_length)
+    val_data, skipped_validation = encode_rows(val_rows, tokenizer, args.max_length)
+    if len(train_data) < 80 or len(val_data) < 12:
+        raise RuntimeError(
+            f"Corpus encodable insuffisant après filtrage : "
+            f"train={len(train_data)}, validation={len(val_data)}."
+        )
+    print(
+        f"[+] encodés : train={len(train_data)}, validation={len(val_data)} ; "
+        f"ignorés : train={skipped_train}, validation={skipped_validation}",
+        flush=True,
+    )
     collate_fn = lambda batch: collate(batch, tokenizer.eos_token_id)
     generator = torch.Generator().manual_seed(args.seed)
     train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True,
@@ -289,8 +315,12 @@ def main() -> None:
         "best_validation_token_loss": best_loss,
         "history": history,
         "elapsed_seconds": round(time.time() - start, 2),
-        "train_examples": len(train_rows),
-        "validation_examples": len(val_rows),
+        "train_examples": len(train_data),
+        "validation_examples": len(val_data),
+        "training_rows_before_encoding": len(train_rows),
+        "validation_rows_before_encoding": len(val_rows),
+        "skipped_unencodable_training_rows": skipped_train,
+        "skipped_unencodable_validation_rows": skipped_validation,
         "samples_file": "samples_fr.jsonl",
     }
     (out_dir / "metrics.json").write_text(
