@@ -57,9 +57,9 @@ jobs:
         run: |
           python tools/model/prepare_fr_dataset.py \
             --output-dir "$RUNNER_TEMP/nexus-fr-data" \
-            --max-oasst1 150 \
-            --max-alpaca 700 \
-            --seed-repeat 24
+            --max-oasst1 100 \
+            --max-alpaca 500 \
+            --seed-repeat 32
 
       - name: Check prepared corpus for legacy story terms
         run: |
@@ -75,7 +75,7 @@ jobs:
             --out-dir "$RUNNER_TEMP/nexus-lecarnet-fr" \
             --base MaxLSB/LeCarnet-3M \
             --base-revision 0bf134cfceb1b00c7c56a0ebbc1560ec634c3502 \
-            --epochs 10 \
+            --epochs 8 \
             --batch-size 16 \
             --max-length 32 \
             --learning-rate 0.00005
@@ -84,12 +84,33 @@ jobs:
         run: |
           python tools/model/check_narrator_lore.py --input "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl"
 
+      - name: Show generated narrator diagnostics
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl" ]; then
+            cat "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl"
+          else
+            echo "Aucun fichier d'échantillons généré."
+          fi
+
       - name: Check generated samples for complete, useful narration
         run: |
           python tools/model/verify_narrator_samples.py \
             --input "$RUNNER_TEMP/nexus-lecarnet-fr/samples_fr.jsonl" \
             --minimum-samples 4 \
             --minimum-lore-samples 2
+
+      - name: Preserve narrator diagnostics even when quality gates fail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-narrator-diagnostics-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/nexus-lecarnet-fr/samples_fr.jsonl
+            ${{ runner.temp }}/nexus-lecarnet-fr/metrics.json
+            ${{ runner.temp }}/nexus-fr-data/dataset_manifest.json
+          if-no-files-found: ignore
+          retention-days: 30
 
       - name: Export Cardputer-compatible CRDP v3 and CTK2 assets
         run: |

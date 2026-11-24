@@ -16,8 +16,9 @@ INCOMPLETE_ENDINGS = {
     "ta", "te", "tes", "ton", "un", "une", "vers", "vos", "votre",
 }
 LORE_ANCHORS = {
-    "lia", "remanence", "valbrume", "veyrac", "relais",
-    "impulsion", "cassette", "signal", "archive", "empreinte", "resonance",
+    "lia", "nexus", "atlas", "alma", "remanence", "valbrume", "veyrac",
+    "relais", "impulsion", "cassette", "signal", "archive", "archives",
+    "empreinte", "resonance", "secteur", "nuit des retours",
 }
 REFUSAL = re.compile(
     r"\b(?:je ne peux pas|je ne suis pas en mesure|je suis desole|desole)\b",

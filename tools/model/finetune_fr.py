@@ -150,7 +150,7 @@ def generate_sample(model, tokenizer, prompt: str, device: str) -> str:
     ids = encoded.to(device)
     attention_mask = torch.ones_like(ids)
     out = model.generate(
-        ids, attention_mask=attention_mask, max_new_tokens=9, do_sample=False,
+        ids, attention_mask=attention_mask, max_new_tokens=10, do_sample=False,
         eos_token_id=tokenizer.eos_token_id,
         pad_token_id=tokenizer.eos_token_id,
         use_cache=True,
@@ -292,10 +292,10 @@ def main() -> None:
             shutil.copy2(source_file, out_dir / filename)
 
     sample_prompts = [
-        "Le relais 07 émet trois impulsions. Que réponds-tu ?",
-        "Une cassette de Valbrume porte une date incohérente. Que vérifies-tu ?",
-        "Un ami a peur et veut rentrer chez lui. Que lui réponds-tu ?",
-        "La station Veyrac renvoie un écho absent du registre. Que notes-tu ?",
+        "Que désigne la Rémanence à Valbrume ?",
+        "Quel rôle joue LIA dans Nexus ?",
+        "Que notes-tu à la station Veyrac ?",
+        "Que signifie la Nuit des Retours ?",
     ]
     samples = []
     for prompt in sample_prompts:
