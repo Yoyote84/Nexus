@@ -1,38 +1,36 @@
-# Nexus — L'Atlas des Rémanences
+# Nexus : L'Odyssée Arcane
 
-Nexus est un jeu de rôle d'exploration hors ligne, destiné au M5Stack Cardputer ADV. Le joueur arpente librement des secteurs, recueille des empreintes de la Rémanence et reconstitue un atlas d'événements inhabituels.
+Nexus est un jeu de rôle hors ligne sur M5Stack Cardputer ADV. L'histoire commence à Marcheprime en 1984 et relie trois dimensions : la Terre, Avelune et le Revers. Le joueur incarne Craissant, accompagné de Manée et Woodsam, interprétés par le Maître du Jeu.
 
-## Univers
+Le royaume d'Avelune est tombé sous le pouvoir de Varkhël, souverain venu du Revers, qui détourne les Seuils pour envoyer ses créatures sur Terre. Le joueur contrôle Craissant ; le MJ contrôle Manée, Woodsam et tous les PNJ.
 
-L'histoire-cadre prend place en 1987 autour de Valbrume, commune fictive marquée par la Nuit des Retours du 14 octobre 1986. Des fragments de sons et de mesures réapparaissent dans des archives et des signaux. Le joueur est un arpenteur assisté par LIA, le Lecteur d'Indices Acoustiques.
-
-Lire `docs/UNIVERSE.md`, `docs/NARRATIVE_STYLE.md` et `docs/ORIGINALITY_AND_PROVENANCE.md`.
+Lire docs/UNIVERSE.md, docs/NARRATIVE_STYLE.md, docs/ROLEPLAY_RULES.md et docs/CHARACTERS_AND_LOGBOOKS.md.
 
 ## Cible
 
 - M5Stack Cardputer ADV.
-- Module Cap LoRa-1262/GNSS en option pour les données locales de position.
-- microSD pour les sauvegardes et les ressources.
+- Cap LoRa-1262/GNSS pour l'exploration réelle, sans obligation d'utiliser le GPS.
+- microSD pour les sauvegardes, les fiches, les journaux et les ressources.
 - Aucun téléphone, réseau ou Wi-Fi nécessaire pendant une partie.
 
 ## Organisation
 
-- `src/core/` — monde, personnage, missions et règles déterministes.
-- `src/exploration/` — secteurs et événements de déplacement.
-- `src/narrator/` — protocole, mémoire et modèle local.
-- `src/storage/` — codecs et adaptateurs de persistance.
-- `src/platform/cardputer/` — contrôleur historique à découpler à l'étape 4.
-- `tests/` — tests natifs.
-- `tools/model/` — corpus, entraînement et export du narrateur.
+- src/core/ — monde, personnage, missions et règles déterministes.
+- src/exploration/ — secteurs et événements de déplacement.
+- src/narrator/ — scènes, mémoire des personnages et modèle local expérimental.
+- src/storage/ — codecs et adaptateurs de persistance.
+- src/platform/cardputer/ — contrôleur historique à découpler à l'étape 4.
+- tests/ — tests natifs.
+- tools/model/ — corpus, entraînement et export expérimental du narrateur.
 
 ## Migration en cinq étapes
 
 - [x] 1/5 — audit.
 - [x] 2/5 — extraction dans ce dépôt.
-- [~] 3/5 — moteur narratif français hors ligne compilé et validé en CI ; LeCarnet-3M reste expérimental et non approuvé.
-- [ ] 4/5 — adaptation et intégration du moteur narratif dans le firmware ROZA.
+- [~] 3/5 — univers original, scènes et continuité narrative en cours de validation.
+- [ ] 4/5 — intégration des trois mondes, des jets, des fiches et des journaux dans le firmware ROZA.
 - [ ] 5/5 — firmware installable final et essais physiques sur le Cardputer ADV.
 
-Le moteur narratif autonome passe ses tests natifs avec AddressSanitizer et UndefinedBehaviorSanitizer. Il combine des scènes originales, des variantes reproductibles et huit jalons d'intrigue persistants, sans inventer les actions ou les objets du joueur. Le dernier réentraînement de LeCarnet-3M a échoué au contrôle de qualité ; il reste désactivé comme source principale tant qu'il ne produit pas un français fiable.
+Le moteur narratif hors ligne est validé par les tests natifs. Les prochaines tâches consistent à relier les scènes au monde à trois dimensions, aux jets de dés, aux fiches et aux trois journaux persistants. Le petit modèle génératif reste expérimental et n'est pas approuvé comme MJ autonome.
 
-Les clés de sauvegarde historiques restent compatibles ; voir `docs/migration/LEGACY_SOURCE_NOTES.md`.
+Les sauvegardes et les journaux doivent rester locaux sur microSD. Les détails techniques et les limites de compatibilité figurent dans docs/MIGRATION_STATUS.md.
