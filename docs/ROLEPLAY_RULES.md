@@ -59,7 +59,7 @@ L'expérience récompense les objectifs, les découvertes utiles et les choix si
 
 ## Dés
 
-Le jeu prévoit les dés d4, d6, d8, d10, d12 et d20. L'animation du dé est une présentation : le résultat est calculé par le moteur, puis inscrit dans le journal de partie. Le lanceur ne doit jamais masquer les messages ni empêcher de lire l'histoire.
+Le jeu prévoit les dés d4, d6, d8, d10, d12 et d20. Le rendu visé est un dé polyédrique en 3D stylisée, avec une vraie silhouette correspondant au nombre de faces, une rotation visible et la face finale affichée. Le lanceur s'ouvre en superposition à la demande ; il ne reste pas fixé sur l'historique des messages. Après le lancer, il se referme et le résultat est transmis au MJ et inscrit dans le journal de partie. L'animation est une présentation : le résultat réel est calculé par le moteur, jamais choisi en fonction de l'image affichée.
 
 ## Pour les débutants
 
