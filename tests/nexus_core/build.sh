@@ -2,7 +2,8 @@
 # Tests natifs du moteur Nexus, sans matériel ESP32.
 set -euo pipefail
 cd "$(dirname "$0")"
-if [ -z "$CXX" ]; then CXX=g++; fi
+if ! declare -p CXX >/dev/null 2>&1; then CXX=g++; elif [ -z "$CXX" ]; then CXX=g++; fi
+if ! declare -p SAN >/dev/null 2>&1; then SAN=0; fi
 SANFLAGS=""
 if [ "$SAN" = "1" ]; then
   SANFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
