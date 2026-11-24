@@ -1,65 +1,53 @@
-# Architecture de narration — Nexus
+# Architecture de narration — Nexus : L'Odyssée Arcane
 
 ## Objectif
 
-LIA doit raconter une enquête suivie, en français, sans réseau et sans téléphone. Sa narration doit rester cohérente avec le monde, les choix réellement effectués et les preuves enregistrées. Elle ne doit jamais inventer l'inventaire, les missions, les récompenses ou les actions du joueur.
+Le système doit faire vivre une campagne JDR persistante, jouable hors ligne sur Cardputer ADV. Il soutient le Maître du Jeu, l'interprétation de Manée et Woodsam, les PNJ et la continuité entre les trois dimensions. Le joueur reste seul maître des décisions de Craissant.
 
-## Principes repris des outils narratifs éprouvés
+## Structure narrative
 
-Les outils de narration interactive comme **Yarn Spinner** structurent une histoire en scènes, lignes et choix conditionnels. Ils utilisent des variables persistantes pour adapter les dialogues aux décisions précédentes, ainsi que des *storylets* pour sélectionner le contenu pertinent dans une situation donnée. **Ink** suit une approche text-first : le texte et les embranchements restent lisibles par les auteurs, puis sont exécutés par un moteur de jeu.
+Les systèmes de narration interactive tels que Yarn Spinner et ink démontrent l'intérêt de séparer les scènes, les lignes de dialogue, les choix, les conditions et les variables persistantes. Yarn Spinner documente les choix conditionnels, les variables, les détours et les storylets ; ink documente la présentation des choix ainsi que l'enregistrement et le rechargement de l'état narratif.
 
-Nexus reprend ces idées, sans embarquer un moteur généraliste trop lourd pour le Cardputer :
+Nexus reprend ces principes dans un moteur C++ adapté au Cardputer : scènes thématiques indépendantes, choix proposés par le MJ, faits de campagne validés par le moteur de règles, variables persistantes, journaux indépendants et sauvegardes locales.
 
-- une scène correspond à un événement ou à une décision validée par le jeu ;
-- les variables persistantes sont lues depuis les sauvegardes existantes ;
-- plusieurs formulations originales sont disponibles pour chaque scène ;
-- une clé déterministe combine la graine du monde, le jour, le secteur et la séquence d'événement ;
-- les preuves, les jalons d'intrigue persistants et la relation avec LIA ajustent le ton et le degré de certitude ;
-- la sélection d'un texte ne modifie jamais les règles du jeu.
+Références de conception :
+- Yarn Spinner : https://www.yarnspinner.dev/docs/
+- Yarn Spinner — choix, variables et storylets : https://www.yarnspinner.dev/features/
+- ink — choix et sauvegarde d'état : https://github.com/inkle/ink/blob/master/Documentation/RunningYourInk.md
 
-Références :
-- Yarn Spinner — documentation : https://yarnspinner.dev/docs/
-- Yarn Spinner — variables, choix conditionnels et storylets : https://www.yarnspinner.dev/features/
-- ink d'inkle — langage narratif pour jeux : https://www.inklestudios.com/ink/
+## Canon en cours
 
-## Moteur actuellement ajouté
+Le récit commence à Marcheprime en 1984 et relie trois dimensions : la Terre, Avelune — royaume enchanté conquis — et le Revers, dimension d'origine de Varkhël. Les Seuils sont les passages entre ces mondes et le Nexus est leur point de convergence.
 
-Le fichier src/narrator/nexus_narrative_engine.cpp fournit une banque de scènes française sans allocation dynamique. Chaque appel construit une sortie courte, déterministe et limitée à 210 octets, compatible avec la capacité du protocole de narration déjà présent.
+Manée et Woodsam sont joués par le MJ. Craissant est joué par l'utilisateur. Le MJ contrôle les PNJ mais ne prend jamais les décisions du joueur.
 
-Les scènes couvrent :
-1. ouverture de l'enquête ;
-2. les trois choix du premier contact ;
-3. découverte d'un secteur ;
-4. signal radio ;
-5. anomalie électrique ;
-6. empreinte rémanente ;
-7. mouvement des groupes de Valbrume ;
-8. appel radio ambigu ;
-9. onde de résonance ;
-10. archive retrouvée ;
-11. mission accomplie ;
-12. observation calme.
+## Moteur narratif C++
 
-Le moteur propose plusieurs formulations par scène. Il complète ensuite le texte selon les preuves déjà confirmées, l'intensité de l'événement, les jalons d'intrigue persistants (signal résolu, motif décodé, trois secteurs cartographiés, carnet d'Alma retrouvé, contacts établis, motif de résonance compris), la confiance accordée à LIA et la chronologie. Les huit jalons correspondent exactement aux huit bits de `NarrativeMemory::plotFlags` ; l'étape 4 pourra donc les relier directement à la sauvegarde existante. Un appel ambigu reçoit toujours un rappel de sécurité : le jeu ne remplace pas les secours réels.
+Le fichier src/narrator/nexus_narrative_engine.cpp propose des scènes originales et déterministes, sans allocation dynamique. Les scènes couvrent les choix initiaux, les événements, les Seuils, le passage de créatures, la découverte d'Avelune, l'influence du Revers et les interventions de Manée et Woodsam.
 
-La sélection est reproductible : un même état produit le même texte. Un changement de jour, de secteur, de séquence d'événement ou de progression peut produire une autre formulation. Cela évite les répétitions immédiates tout en facilitant les tests et la reprise après redémarrage.
+La formulation est sélectionnée selon la graine du monde, la séquence d'événement, le jour, le secteur, l'intensité, les indices et les jalons d'intrigue. Un même état produit la même sortie ; une progression de campagne peut produire une autre variante.
 
-Le moteur refuse une scène invalide, une intensité ou une confiance hors limites, une sortie incomplète, un texte trop long et les références lexicales héritées de l'œuvre source. Il ne reçoit aucun pointeur vers les structures mutables du personnage, de l'inventaire ou des missions.
+Le moteur refuse une scène invalide, une valeur de contexte hors limites, une sortie trop longue, vide, inachevée ou contenant des références lexicales héritées. Il ne reçoit aucun pointeur vers les structures mutables du joueur ou de l'inventaire.
 
-## Pourquoi le petit LLM n'est pas le narrateur principal
+## Rôle du petit modèle local
 
-Le modèle LeCarnet-3M reste une expérimentation. Le profil embarqué actuel impose 32 tokens de contexte et au plus neuf tokens de texte généré. Le dernier entraînement vérifié le 24 novembre 2026 a obtenu une perte d'entraînement de 1,9065, mais une meilleure perte de validation de 6,4704, sans amélioration utile au fil des époques. Les quatre exemples générés étaient incohérents et le contrôle qualité a échoué.
+Le modèle LeCarnet-3M n'est pas approuvé comme MJ autonome. Le dernier entraînement vérifié le 24 novembre 2026 a produit des sorties françaises incohérentes et a échoué au contrôle qualité avant export. Les assets structurellement valides ne prouvent pas la qualité narrative.
 
-Une étude récente sur les modèles de langage et les microcontrôleurs ESP32 distingue clairement les systèmes assistés par un hôte, les systèmes reliés au réseau et les modèles réellement exécutés sur le microcontrôleur. Elle ne relève pas de LLM conversationnel généraliste démontré sur ESP32. Nexus ne doit donc pas présenter le petit modèle actuel comme une IA narrative fiable.
+Le modèle génératif reste optionnel et expérimental. Il ne pourra que proposer une formulation si elle passe les contrôles de français, de pertinence, de continuité, d'originalité et de sécurité. Le moteur déterministe et les données sauvegardées restent les autorités. Une réponse du modèle ne peut jamais modifier les PV, l'inventaire, les compétences, les jets, les relations ou les événements sans validation par le moteur de règles.
 
-Référence technique : revue systématique 2026, *Language and Transformer Models with ESP32-Class Microcontrollers*, https://jurnal.unpad.ac.id/ijmt/article/view/72405/0.
+## Personnages et journaux
 
-Le modèle pourra être réévalué ultérieurement, mais uniquement derrière le moteur narratif : une génération ne sera jamais utilisée si elle est vide, incomplète, trop longue, hors sujet ou contraire au lore. Le texte déterministe restera le mode de secours et la source fiable.
+Les trois journaux sont une mémoire durable : Craissant conserve les notes du joueur ; Manée ses mythes, intuitions, découvertes personnelles et hypothèses ; Woodsam ses plans, ressources, risques et observations tactiques.
 
-## Validation
+Les faits confirmés, les hypothèses et les questions restent séparés. Un compagnon ne peut écrire comme souvenir personnel un événement qu'il n'a pas vu ou appris. Les entrées importantes sont associées au jour, au monde et à l'événement quand ces données existent. La persistance sur microSD et les déclencheurs automatiques relèvent de l'étape 4.
 
-Le test tests/nexus_core/narrative_engine_test.cpp vérifie les scènes, la variation reproductible, la réaction aux preuves, aux huit jalons persistants et à la confiance, le routage des événements et des choix, les appels ambigus, les limites de taille et le garde-fou d'originalité. Le workflow nexus-narrative-verify.yml exécute ces tests natifs avec les autres régressions du moteur.
+## Règles et jets
 
-## Limite de l'étape 3
+Les règles proposées sont décrites dans docs/ROLEPLAY_RULES.md : d20 ajouté à une caractéristique, seuils annoncés avant le lancer, conflits, blessures et état critique où la mort est possible. Leur présence dans la documentation ne signifie pas qu'elles sont déjà toutes intégrées au firmware : cette intégration sera vérifiée à l'étape 4, puis testée physiquement à l'étape 5.
 
-Le moteur narratif autonome et ses tests relèvent de l'étape 3. Le branchement de chaque événement du jeu vers ce moteur, l'affichage Cardputer et la priorité entre texte déterministe et génération locale relèvent de l'étape 4. Les mesures de mémoire, de vitesse et de stabilité sur le véritable Cardputer ADV relèvent de l'étape 5.
+## Frontières des cinq étapes
+
+- Étapes 1 et 2 : audit et extraction, terminés.
+- Étape 3 : univers original, règles décrites et moteur narratif autonome ; validation de contenu en cours.
+- Étape 4 : intégration Cardputer/ROZA, états des trois mondes, jets, fiches, journaux et affichage.
+- Étape 5 : firmware installable, mesures mémoire/vitesse et essais physiques par l'utilisateur.
