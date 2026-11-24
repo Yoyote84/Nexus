@@ -59,7 +59,7 @@ jobs:
             --output-dir "$RUNNER_TEMP/nexus-fr-data" \
             --max-oasst1 100 \
             --max-alpaca 500 \
-            --seed-repeat 32
+            --seed-repeat 16
 
       - name: Check prepared corpus for legacy story terms
         run: |
