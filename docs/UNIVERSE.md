@@ -1,67 +1,70 @@
-# Nexus — L'Atlas des Rémanences
+# Nexus : L'Odyssée Arcane
 
 ## Identité
 
-**Nexus** est un jeu de rôle d'exploration hors ligne. Son sous-titre narratif est **L'Atlas des Rémanences**. L'ambiance associe mystère scientifique, radios analogiques, carnets de terrain et exploration libre. Le jeu ne reprend ni personnages, ni lieux, ni créatures, ni institutions d'une franchise existante.
+Nexus : L'Odyssée Arcane est un jeu de rôle d'aventure et de mystère, conçu pour fonctionner hors ligne sur le M5Stack Cardputer ADV. L'ambiance combine enquête surnaturelle dans la France des années 1980, fantasy inquiétante, exploration, relations entre compagnons et conséquences réelles. L'univers, les personnages, les créatures, les royaumes et les textes de Nexus sont originaux.
 
-## Cadre
+## Le point de départ : Marcheprime, 1984
 
-L'histoire-cadre se déroule en **1987**, autour de **Valbrume**, une commune fictive organisée autour d'un ancien réseau de mesures et de relais radio. La **station Veyrac** servait à synchroniser des observations acoustiques, météorologiques et géophysiques.
+L'histoire commence à Marcheprime, en Gironde, en 1984. Le quotidien est celui d'une petite commune de l'époque : gare, routes, vélos, forêt des Landes, lignes téléphoniques, radios analogiques, cassettes et appareils photo argentiques.
 
-Le 14 octobre 1986, pendant la **Nuit des Retours**, plusieurs stations ont enregistré des fragments sonores quelques secondes avant leur émission prévue. Les horloges n'ont pas voyagé dans le temps et aucun monde parallèle n'a été découvert : les appareils ont conservé des séquences impossibles à replacer dans leur ordre habituel.
+Craissant, 22 ans, a découvert une pierre gravée près de la gare. Son motif semble changer selon l'angle et l'objet réagit à certains sons. Il retrouve Manée et Woodsam pour comprendre ce qu'il a trouvé. Ils ignorent encore que cette découverte est liée à trois réalités. Aucun smartphone, réseau social ou service moderne ne doit apparaître dans les scènes de 1984.
 
-## Phénomène central : la Rémanence
+## Les trois dimensions
 
-La **Rémanence** désigne le retour irrégulier de fragments d'informations dans certains enregistrements : impulsions radio, sons, variations électriques, motifs lumineux et mesures contradictoires. Elle peut se manifester dans des secteurs éloignés et évoluer au fil du temps.
+### 1. La Terre
 
-Les **empreintes rémanentes** sont des traces mesurables laissées par le phénomène. Elles ne sont pas des monstres ou des espèces humanoïdes. Une observation doit rester décrite avec prudence : le jeu distingue toujours une mesure, une hypothèse et une interprétation.
+La campagne débute à Marcheprime. Les lieux réels servent de cadre d'ambiance et d'exploration par secteurs. Les déplacements GPS, lorsqu'ils seront intégrés, ne doivent jamais pousser le joueur vers une propriété privée, une voie dangereuse, une zone interdite ou un point d'accès risqué. Le jeu doit fonctionner même si le GPS est indisponible.
 
-## Le réseau Nexus
+### 2. Avelune — le royaume enchanté
 
-Nexus est le nom donné à l'Atlas des Rémanences : un ensemble de secteurs, de relevés et d'archives qui se répondent. La grille d'exploration est calculée localement à partir des déplacements du joueur. Elle ne dirige jamais le joueur vers un point dangereux, une propriété privée ou un lieu interdit. Les découvertes sont abstraites par secteur et ne nécessitent aucun paquet cartographique à télécharger.
+Avelune est un monde ancien, traversé par des forêts profondes, des cités oubliées, des ruines, des traditions magiques et des peuples aux intérêts divergents. Il possédait autrefois ses propres gardiens et un réseau de passages entre les mondes.
 
-## Personnage et voix d'assistance
+Avelune a été conquis par Varkhël, un souverain venu de la troisième dimension. Il a pris le contrôle des anciens Seuils et impose désormais son pouvoir sur le royaume. La résistance est dispersée ; certains habitants collaborent, d'autres se cachent ou tentent de préserver les routes encore sûres. Avelune n'est pas uniformément bon : ses habitants ont leurs rivalités, leurs coutumes, leurs secrets et leurs propres choix.
 
-Le joueur incarne un **arpenteur**, libre de choisir son nom et sa spécialité. Il observe, enregistre, compare et décide de ce qu'il partage.
+### 3. Le Revers — la dimension du conquérant
 
-**LIA** signifie **Lecteur d'Indices Acoustiques**. C'est un logiciel d'archive embarqué dans le matériel de terrain, pas une personne disparue. LIA trie les fragments, rappelle les relevés antérieurs et propose des pistes. Le moteur de jeu conserve seul l'autorité sur les missions, les objets, les statistiques, les sauvegardes et les conséquences des choix.
+Le Revers est la réalité d'origine de Varkhël. Ses paysages, ses distances, sa lumière et ses sons suivent des lois instables. Ce n'est pas simplement un lieu sombre : c'est une dimension hostile dont les phénomènes perturbent la matière et les perceptions.
 
-**Alma Veyre**, cartographe et responsable de plusieurs relevés de la station Veyrac, a laissé un carnet incomplet après la Nuit des Retours. Ses notes constituent l'un des fils d'enquête.
+Varkhël cherche à étendre son contrôle au-delà du Revers. Il a d'abord soumis Avelune, puis utilise les Seuils pour faire parvenir ses créatures et son influence jusqu'à la Terre.
 
-## Groupes
+## Les Seuils et le Nexus
 
-- **Le Cercle des Relais** : opérateurs bénévoles qui entretiennent les fréquences et échangent des relevés.
-- **Le Bureau des Mesures** : service technique chargé de vérifier les appareils et de préserver les données officielles.
-- **Les Collecteurs** : indépendants qui recherchent des archives oubliées et des pièces de mesure.
+Les Seuils sont d'anciens passages reliant les trois dimensions. Certains sont dormants, d'autres endommagés ou contrôlés par Varkhël. Leur ouverture laisse passer des êtres, des objets et des phénomènes du monde d'origine.
 
-Aucun groupe n'est automatiquement bon ou mauvais. Leurs motivations peuvent diverger selon les découvertes du joueur.
+Le Nexus est le point de convergence du réseau des trois dimensions. Si Varkhël parvient à le contrôler complètement, les frontières entre les mondes risquent de céder. Le découvrir, comprendre ses règles et décider de son avenir constitue l'arc central de la campagne.
 
-## Vocabulaire du monde
+Les passages ne sont pas tous visibles ni accessibles. Leur découverte vient d'indices, de choix et d'événements de jeu, pas d'une destination GPS imposée.
 
-| Terme | Sens dans Nexus |
-|---|---|
-| Rémanence | Retour irrégulier d'un fragment d'information |
-| Empreinte | Trace mesurable d'une Rémanence |
-| Impulsion | Signal bref utilisé pour identifier un motif |
-| Secteur | Cellule abstraite de progression géographique |
-| Onde de résonance | Variation intense du phénomène, sans portail ni passage |
-| Archive | Donnée horodatée conservée par LIA ou l'arpenteur |
-| Nuit des Retours | Incident initial du 14 octobre 1986 |
+## L'antagoniste et les créatures
 
-## Boucle de jeu
+Varkhël, appelé le Roi des Seuils, est originaire du Revers. Il a conquis Avelune et détourné le réseau des passages. Son objectif réel, ses limites et ses raisons seront révélés progressivement. Il n'est pas omniscient : il a des ressources, des contraintes, des agents et des angles morts.
 
-1. Le monde évolue localement avec le temps ou avec les jours de jeu.
-2. Les déplacements révèlent des secteurs et peuvent produire des événements.
-3. Le joueur compare les empreintes, accomplit des missions et développe son personnage.
-4. LIA raconte les conséquences à partir des données validées.
-5. Les sauvegardes restent locales et la partie fonctionne sans téléphone, réseau ou Wi-Fi.
+Les créatures qui franchissent les Seuils sont des êtres originaux liés au Revers. Elles doivent posséder des comportements, des capacités et des signes distinctifs propres à Nexus. Le bestiaire sera développé sans reprendre des créatures reconnaissables d'autres œuvres.
 
-## Règles narratives non négociables
+## Personnages principaux
 
-- Ne jamais présenter la Rémanence comme une dimension inversée ou un monde parallèle.
-- Ne pas introduire de créatures ou de personnages empruntés à une œuvre existante.
-- Ne pas envoyer le joueur vers des coordonnées précises, des bâtiments privés ou des lieux dangereux.
-- Ne jamais demander de grimper, pénétrer, traverser une route dangereuse ou contourner une interdiction.
-- Ne jamais inventer un objet, une mission, une récompense ou une action déjà accomplie.
-- Le narrateur ne modifie jamais directement l'état du jeu.
-- Les événements inconnus doivent rester des hypothèses, pas des certitudes.
+- Manée, 24 ans — meneuse intuitive, passionnée de mythes et de légendes. Contrôlée par le MJ.
+- Woodsam, 23 ans — stratège et protecteur, capable de garder la tête froide sous pression. Contrôlé par le MJ.
+- Craissant, 22 ans — curieux et premier découvreur de l'indice à Marcheprime. Contrôlé par le joueur.
+
+Le MJ interprète également tous les personnages non-joueurs, alliés, adversaires et créatures.
+
+## Rôle du Maître du Jeu
+
+Le MJ décrit les situations, joue Manée et Woodsam, interprète les PNJ, présente les conséquences et demande les jets nécessaires. Il respecte les fiches, les blessures, l'inventaire, les relations, les journaux et la chronologie persistés.
+
+Le MJ ne décide jamais des paroles ou des actions de Craissant. Il ne réécrit pas les règles pour sauver un personnage. Tous les personnages peuvent mourir, mais aucune mort ne doit être arbitraire ou sans danger clairement annoncé.
+
+## Boucle de campagne
+
+1. Le joueur décrit l'action ou la décision de Craissant.
+2. Le MJ décrit la réaction du monde et joue Manée, Woodsam et les PNJ.
+3. Si une action comporte un risque incertain, le MJ annonce le jet, la caractéristique et la difficulté.
+4. Le résultat des dés est appliqué aux fiches et à l'état du monde.
+5. Les faits importants sont archivés dans les journaux concernés.
+6. La campagne reprend à partir des données sauvegardées, y compris après extinction.
+
+## Contraintes de plateforme
+
+Le jeu reste jouable sur le Cardputer ADV sans téléphone, Internet ni Wi-Fi. La microSD sert aux sauvegardes et aux ressources. Le GNSS peut enrichir l'exploration de la Terre, mais ne doit jamais être obligatoire. Les dimensions fictives utilisent une carte abstraite indépendante du GPS.
