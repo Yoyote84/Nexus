@@ -15,7 +15,7 @@ static NexusNarrativeContext sampleContext() {
   context.sectorKey = 0xA51C27U;
   context.intensity = 42U;
   context.evidenceCount = 1U;
-  context.liaTrust = 60U;
+  context.companionTrust = 60U;
   return context;
 }
 
@@ -64,13 +64,13 @@ static void testNarrativeReactsToEvidenceAndTrust() {
   NexusNarrativeContext context = sampleContext();
   context.scene = NarrativeScene::ResidualTrace;
   context.evidenceCount = 0U;
-  context.liaTrust = 20U;
+  context.companionTrust = 20U;
   char cautious[kNexusNarrativeTextCapacity + 1U] = {};
   assert(buildNexusNarrative(context, cautious, sizeof(cautious)));
   assert(strstr(cautious, "hypothèse") != nullptr);
 
   context.evidenceCount = 9U;
-  context.liaTrust = 90U;
+  context.companionTrust = 90U;
   char corroborated[kNexusNarrativeTextCapacity + 1U] = {};
   assert(buildNexusNarrative(context, corroborated, sizeof(corroborated)));
   assert(strstr(corroborated, "concordent") != nullptr);
@@ -82,14 +82,14 @@ static void testPersistentPlotFlagsChangeNarrative() {
   context.scene = NarrativeScene::ResidualTrace;
   context.plotFlags = 0U;
   context.evidenceCount = 1U;
-  context.liaTrust = 60U;
+  context.companionTrust = 60U;
   char baseline[kNexusNarrativeTextCapacity + 1U] = {};
   assert(buildNexusNarrative(context, baseline, sizeof(baseline)));
 
-  context.plotFlags = narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound);
+  context.plotFlags = narrativePlotMask(NarrativePlotFlag::AveluneArchiveFound);
   char archive[kNexusNarrativeTextCapacity + 1U] = {};
   assert(buildNexusNarrative(context, archive, sizeof(archive)));
-  assert(strstr(archive, "Alma") != nullptr);
+  assert(strstr(archive, "Avelune") != nullptr);
   assert(strcmp(baseline, archive) != 0);
 
   context.plotFlags = narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown);
@@ -106,11 +106,43 @@ static void testPersistentPlotFlagsChangeNarrative() {
   assert(narrativePlotMask(NarrativePlotFlag::FirstSignalResolved) == 0x01U);
   assert(narrativePlotMask(NarrativePlotFlag::SignalDecoded) == 0x02U);
   assert(narrativePlotMask(NarrativePlotFlag::ThreeSectorsMapped) == 0x04U);
-  assert(narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound) == 0x08U);
+  assert(narrativePlotMask(NarrativePlotFlag::AveluneArchiveFound) == 0x08U);
   assert(narrativePlotMask(NarrativePlotFlag::CircleContacted) == 0x10U);
   assert(narrativePlotMask(NarrativePlotFlag::BureauContacted) == 0x20U);
   assert(narrativePlotMask(NarrativePlotFlag::CollectorsContacted) == 0x40U);
   assert(narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown) == 0x80U);
+}
+
+static void testOriginalThreeWorldScenes() {
+  NexusNarrativeContext context = sampleContext();
+  const NarrativeScene scenes[] = {
+      NarrativeScene::ThresholdManifestation,
+      NarrativeScene::CreatureCrossing,
+      NarrativeScene::AveluneDiscovery,
+      NarrativeScene::ReverseInfluence,
+      NarrativeScene::ManeeInterlude,
+      NarrativeScene::WoodsamInterlude
+  };
+  for (NarrativeScene scene : scenes) {
+    context.scene = scene;
+    char output[kNexusNarrativeTextCapacity + 1U] = {};
+    assert(buildNexusNarrative(context, output, sizeof(output)));
+    assert(isNexusNarrativeComplete(output));
+  }
+  context.scene = NarrativeScene::ThresholdManifestation;
+  char threshold[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, threshold, sizeof(threshold)));
+  assert(strstr(threshold, "Seuil") != nullptr);
+
+  context.scene = NarrativeScene::CreatureCrossing;
+  char creature[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, creature, sizeof(creature)));
+  assert(strstr(creature, "Revers") != nullptr);
+
+  context.scene = NarrativeScene::AveluneDiscovery;
+  char avelune[kNexusNarrativeTextCapacity + 1U] = {};
+  assert(buildNexusNarrative(context, avelune, sizeof(avelune)));
+  assert(strstr(avelune, "Avelune") != nullptr);
 }
 
 static void testEventAndChoiceRouting() {
@@ -163,6 +195,7 @@ int main() {
   testDeterminismAndVariation();
   testNarrativeReactsToEvidenceAndTrust();
   testPersistentPlotFlagsChangeNarrative();
+  testOriginalThreeWorldScenes();
   testEventAndChoiceRouting();
   testSafetyAndInvalidInput();
   puts("NEXUS: moteur narratif hors ligne, variantes, cohérence et garde-fous valides.");

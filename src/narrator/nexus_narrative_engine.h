@@ -23,6 +23,12 @@ enum class NarrativeScene : uint8_t {
   DistressCall,
   ResonanceWave,
   ArchiveRecovered,
+  ThresholdManifestation,
+  CreatureCrossing,
+  AveluneDiscovery,
+  ReverseInfluence,
+  ManeeInterlude,
+  WoodsamInterlude,
   MissionCompleted,
   QuietObservation,
   Count
@@ -34,7 +40,7 @@ enum class NarrativePlotFlag : uint8_t {
   FirstSignalResolved = 0,
   SignalDecoded,
   ThreeSectorsMapped,
-  AlmaArchiveFound,
+  AveluneArchiveFound,
   CircleContacted,
   BureauContacted,
   CollectorsContacted,
@@ -57,7 +63,7 @@ struct NexusNarrativeContext {
   uint8_t intensity;
   uint8_t evidenceCount;
   uint8_t plotFlags;
-  uint8_t liaTrust;
+  uint8_t companionTrust;
 };
 
 NarrativeScene narrativeSceneForEvent(EventType event);

@@ -17,14 +17,14 @@ struct SceneBank {
   static const char* const name[] = {__VA_ARGS__}
 
 NEXUS_SCENE_BANK(kOpening,
-    "Valbrume dort encore lorsque la station Veyrac laisse passer une impulsion.",
-    "Dans le carnet d'Alma Veyre, une heure a été corrigée deux fois.",
-    "La radio grésille, puis retrouve un silence presque parfait.",
-    "Ton premier relevé rejoint l'Atlas des Rémanences.",
-    "Une page oubliée de la station Veyrac porte une annotation récente.");
+    "Marcheprime, 1984. La pierre gravée de Craissant réagit à trois impulsions radio.",
+    "Manée reconnaît un symbole proche d'une vieille légende, sans en connaître le sens.",
+    "La radio portative grésille alors qu'elle n'est pas allumée.",
+    "Le premier indice rejoint le carnet de l'expédition Nexus.",
+    "Au-delà des pins, l'air se plisse comme si le paysage cachait une couture.");
 
 NEXUS_SCENE_BANK(kFirstContactHelp,
-    "Tu choisis de répondre au signal ; LIA enregistre l'heure et le motif.",
+    "Tu choisis de répondre au signal ; Woodsam note l'heure et le motif.",
     "Tu privilégies l'aide sans quitter un lieu sûr ; la fréquence est conservée.",
     "Tu réponds avec prudence, sans prendre le signal pour une preuve.",
     "Ta décision est notée dans le carnet de terrain, avec le relevé original.");
@@ -33,7 +33,7 @@ NEXUS_SCENE_BANK(kFirstContactInvestigate,
     "Tu choisis d'examiner le signal ; les trois impulsions sont comparées.",
     "Tu privilégies les mesures et gardes l'enregistrement original intact.",
     "Tu demandes une analyse avant toute conclusion sur l'origine du signal.",
-    "LIA relève l'écart entre les impulsions, sans identifier leur émetteur.");
+    "Manée compare les trois impulsions, sans prétendre connaître leur origine.");
 
 NEXUS_SCENE_BANK(kFirstContactRetreat,
     "Tu décides de prendre du recul ; LIA archive le signal sans le poursuivre.",
@@ -42,8 +42,8 @@ NEXUS_SCENE_BANK(kFirstContactRetreat,
     "Tu choisis la prudence ; rien ne t'oblige à poursuivre cette piste aujourd'hui.");
 
 NEXUS_SCENE_BANK(kSectorDiscovered,
-    "Un nouveau secteur entre dans l'Atlas ; LIA ouvre une fiche locale.",
-    "La carte abstraite de Valbrume gagne un secteur encore peu documenté.",
+    "Un nouveau secteur de Marcheprime entre dans la carte de l'expédition.",
+    "La carte de Marcheprime gagne un secteur encore peu documenté.",
     "Une zone jusque-là inconnue rejoint ton carnet d'exploration.",
     "L'Atlas accueille un nouveau secteur, sans désigner de destination précise.",
     "Une première empreinte apparaît dans un secteur qui n'avait pas été relevé.");
@@ -70,31 +70,61 @@ NEXUS_SCENE_BANK(kResidualTrace,
     "LIA retrouve une ressemblance entre deux fragments conservés séparément.");
 
 NEXUS_SCENE_BANK(kFactionMovement,
-    "Le Cercle des Relais modifie ses horaires d'écoute.",
-    "Le Bureau des Mesures réclame une copie du relevé.",
-    "Les Collecteurs proposent un échange de documents d'archives.",
-    "Les groupes de Valbrume ne tirent pas les mêmes conclusions des indices.",
+    "Les Sentinelles d'Avelune changent leurs signaux pour éviter les patrouilles.",
+    "Les réfugiés d'Avelune demandent une preuve que les Seuils peuvent être refermés.",
+    "Les fidèles de Varkhël recherchent ceux qui connaissent encore les anciens passages.",
+    "Les habitants d'Avelune ne s'accordent pas sur la manière de résister au conquérant.",
     "Une nouvelle consigne circule parmi les opérateurs des relais.");
 
 NEXUS_SCENE_BANK(kDistressCall,
     "Une voix semble traverser le bruit radio, sans être clairement identifiable.",
     "Un fragment ressemble à un appel à l'aide, mais son origine reste inconnue.",
     "La bande contient une syllabe répétée que LIA ne peut pas attribuer.",
-    "Une tonalité inhabituelle se mêle à l'enregistrement du relais.");
+    "Une voix inconnue traverse le grésillement ; impossible de dire si elle vient d'Avelune ou du Revers.");
 
 NEXUS_SCENE_BANK(kResonanceWave,
-    "Une onde de résonance traverse plusieurs mesures au même instant.",
-    "Les enregistreurs relèvent une variation simultanée dans plusieurs secteurs.",
-    "Une onde brève se propage dans les archives locales.",
-    "Plusieurs empreintes semblent répondre au même rythme.",
-    "La chronologie des relevés révèle une nouvelle concordance.");
+    "Une onde traverse les trois dimensions ; la pierre répond au même rythme.",
+    "Les trois mondes semblent vibrer au même instant.",
+    "Une onde brève traverse un Seuil encore dormant.",
+    "Des signes séparés semblent répondre à un même appel.",
+    "La chronologie révèle une concordance entre la Terre, Avelune et le Revers.");
 
 NEXUS_SCENE_BANK(kArchiveRecovered,
-    "Une page signée Alma Veyre apparaît dans le dossier de la station Veyrac.",
-    "Le carnet d'Alma décrit trois mesures prises avant la Nuit des Retours.",
-    "Une annotation d'Alma Veyre relie deux fréquences encore mal documentées.",
-    "Dans les archives de Veyrac, une ligne a été ajoutée après le classement.",
-    "Un ancien relevé refait surface ; LIA conserve sa date et sa provenance.");
+    "Une ancienne carte d'Avelune révèle la position d'un Seuil oublié.",
+    "Une chronique décrit les gardiens qui protégeaient autrefois les passages.",
+    "Une inscription relie le symbole de Craissant à un ancien passage entre les mondes.",
+    "Dans les ruines d'Avelune, une ligne semble avoir été gravée après la chute du royaume.",
+    "Un ancien relevé refait surface ; le groupe conserve sa date et sa provenance.");
+
+NEXUS_SCENE_BANK(kThresholdManifestation,
+    "L'air se plisse et laisse apparaître un Seuil, instable et silencieux.",
+    "La pierre gravée chauffe ; une ligne lumineuse dessine un passage dans l'air.",
+    "Le paysage se dédouble un instant, révélant une ouverture vers un autre monde.");
+
+NEXUS_SCENE_BANK(kCreatureCrossing,
+    "Une forme venue du Revers franchit le Seuil avant qu'il ne se referme.",
+    "Une créature inconnue apparaît dans les pins ; elle semble chercher un passage.",
+    "Un bruit de griffes résonne derrière la couture lumineuse. Quelque chose a traversé.");
+
+NEXUS_SCENE_BANK(kAveluneDiscovery,
+    "Avelune apparaît au-delà du passage : une forêt ancienne couvre les ruines d'un royaume.",
+    "Les pierres d'Avelune portent les marques d'une conquête récente.",
+    "Une route oubliée traverse les bois d'Avelune, mais ses anciens gardiens ont disparu.");
+
+NEXUS_SCENE_BANK(kReverseInfluence,
+    "Le Revers altère les sons ; la voix semble venir de plusieurs directions à la fois.",
+    "Une poussière grise traverse le Seuil et fait vaciller les couleurs du paysage.",
+    "La lumière se contracte. Le Revers laisse une trace sur la pierre.");
+
+NEXUS_SCENE_BANK(kManeeInterlude,
+    "Manée rapproche le symbole d'un récit ancien, mais refuse d'en faire une certitude.",
+    "Manée note une ressemblance avec une légende et cherche ce qui ne correspond pas.",
+    "Manée suit son intuition : le signe parle d'un passage, pas nécessairement d'une porte.");
+
+NEXUS_SCENE_BANK(kWoodsamInterlude,
+    "Woodsam vérifie les issues et compte les ressources avant de proposer un plan.",
+    "Woodsam garde le groupe ensemble et repère un abri à proximité.",
+    "Woodsam observe la créature sans s'approcher ; il cherche une issue praticable.");
 
 NEXUS_SCENE_BANK(kMissionCompleted,
     "L'objectif est confirmé : les relevés nécessaires sont réunis.",
@@ -123,6 +153,12 @@ static const SceneBank kBanks[] = {
     {kDistressCall, sizeof(kDistressCall) / sizeof(kDistressCall[0])},
     {kResonanceWave, sizeof(kResonanceWave) / sizeof(kResonanceWave[0])},
     {kArchiveRecovered, sizeof(kArchiveRecovered) / sizeof(kArchiveRecovered[0])},
+    {kThresholdManifestation, sizeof(kThresholdManifestation) / sizeof(kThresholdManifestation[0])},
+    {kCreatureCrossing, sizeof(kCreatureCrossing) / sizeof(kCreatureCrossing[0])},
+    {kAveluneDiscovery, sizeof(kAveluneDiscovery) / sizeof(kAveluneDiscovery[0])},
+    {kReverseInfluence, sizeof(kReverseInfluence) / sizeof(kReverseInfluence[0])},
+    {kManeeInterlude, sizeof(kManeeInterlude) / sizeof(kManeeInterlude[0])},
+    {kWoodsamInterlude, sizeof(kWoodsamInterlude) / sizeof(kWoodsamInterlude[0])},
     {kMissionCompleted, sizeof(kMissionCompleted) / sizeof(kMissionCompleted[0])},
     {kQuietObservation, sizeof(kQuietObservation) / sizeof(kQuietObservation[0])}
 };
@@ -143,7 +179,7 @@ uint32_t selectionKey(const NexusNarrativeContext& context) {
   value ^= context.sectorKey + 0x27D4EB2FU;
   value ^= static_cast<uint32_t>(context.intensity) << 24U;
   value ^= static_cast<uint32_t>(context.evidenceCount) << 8U;
-  value ^= static_cast<uint32_t>(context.liaTrust) << 16U;
+  value ^= static_cast<uint32_t>(context.companionTrust) << 16U;
   return mix(value);
 }
 
@@ -152,8 +188,8 @@ const char* contextLine(const NexusNarrativeContext& context,
   if (scene == NarrativeScene::DistressCall) {
     return "Si le danger est réel, contacte les secours par les moyens habituels.";
   }
-  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::AlmaArchiveFound)) != 0U) {
-    return "Les notes d'Alma offrent une piste supplémentaire à comparer aux mesures.";
+  if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::AveluneArchiveFound)) != 0U) {
+    return "Les archives d'Avelune offrent une piste supplémentaire à comparer aux indices.";
   }
   if ((context.plotFlags & narrativePlotMask(NarrativePlotFlag::ResonancePatternKnown)) != 0U) {
     return "Le motif est mieux décrit ; son origine reste à établir.";
@@ -178,19 +214,19 @@ const char* contextLine(const NexusNarrativeContext& context,
   if (context.intensity >= 75U) {
     return "L'intensité est élevée, sans établir à elle seule un danger.";
   }
-  if (context.liaTrust <= 25U) {
-    return "LIA signale ses limites et classe cette lecture comme une hypothèse.";
+  if (context.companionTrust <= 25U) {
+    return "Manée et Woodsam signalent leurs doutes et gardent cette lecture au rang d'hypothèse.";
   }
-  if (context.liaTrust >= 80U) {
-    return "LIA propose une piste ; tu restes libre de la vérifier ou non.";
+  if (context.companionTrust >= 80U) {
+    return "Manée propose une piste ; tu restes libre de la vérifier ou non.";
   }
   if (context.evidenceCount > 0U) {
-    return "LIA conserve la trace pour la comparer aux prochaines empreintes.";
+    return "Woodsam conserve la trace pour la comparer aux prochains indices.";
   }
   if ((context.simulatedDay & 1U) == 0U) {
     return "La chronologie est conservée pour les comparaisons futures.";
   }
-  return "Cette observation rejoint l'Atlas, sans imposer la suite de l'enquête.";
+  return "Cette observation rejoint le journal de l'expédition, sans imposer la suite de l'enquête.";
 }
 
 }  // namespace
@@ -247,7 +283,7 @@ bool buildNexusNarrative(const NexusNarrativeContext& context,
 
   const uint8_t sceneIndex = static_cast<uint8_t>(context.scene);
   if (sceneIndex >= static_cast<uint8_t>(NarrativeScene::Count) ||
-      context.intensity > 100U || context.liaTrust > 100U) return false;
+      context.intensity > 100U || context.companionTrust > 100U) return false;
 
   const SceneBank& bank = kBanks[sceneIndex];
   if (!bank.lines || bank.count == 0U) return false;
